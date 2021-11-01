@@ -13,7 +13,7 @@ public class WrapperTest {
 
     @Test
     public void testToTreeOne() {
-        TreeNode root = Wrapper.stringToTreeNode("[1]");
+        TreeNode root = Wrapper.stringToTreeNode("[1]").get();
         assertEquals(1, root.val);
         assertEquals(null, root.left);
         assertEquals(null, root.right);
@@ -21,7 +21,7 @@ public class WrapperTest {
 
     @Test
     public void testToTreeThree() {
-        TreeNode root = Wrapper.stringToTreeNode("[1,2,3]");
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,3]").get();
         assertEquals(1, root.val);
         assertEquals(2, root.left.val);
         assertEquals(3, root.right.val);
@@ -29,7 +29,7 @@ public class WrapperTest {
 
     @Test
     public void testToTreeThreeNull() {
-        TreeNode root = Wrapper.stringToTreeNode("[1,null,3]");
+        TreeNode root = Wrapper.stringToTreeNode("[1,null,3]").get();
         assertEquals(1, root.val);
         assertEquals(null, root.left);
         assertEquals(3, root.right.val);
@@ -37,7 +37,7 @@ public class WrapperTest {
 
     @Test
     public void testToTreeFour() {
-        TreeNode root = Wrapper.stringToTreeNode("[4,2,1,3]");
+        TreeNode root = Wrapper.stringToTreeNode("[4,2,1,3]").get();
         assertEquals(4, root.val);
         assertEquals(2, root.left.val);
         assertEquals(1, root.right.val);
@@ -46,7 +46,7 @@ public class WrapperTest {
 
     @Test
     public void testToTreeFourInt() {
-        TreeNode root = Wrapper.arrayToTreeNode(Stream.of(4,2,1,3).map(Optional::of).toList());
+        TreeNode root = Wrapper.arrayToTreeNode(Stream.of(4,2,1,3).map(Optional::of).toList()).get();
         assertEquals(4, root.val);
         assertEquals(2, root.left.val);
         assertEquals(1, root.right.val);
@@ -103,18 +103,19 @@ public class WrapperTest {
 
     @Test
     public void testRoundEmpty() {
-        assertEquals("[]", Wrapper.treeNodeToString(Wrapper.stringToTreeNode("[]")));
+        Optional<TreeNode> ot = Wrapper.stringToTreeNode("[]");
+        assertEquals("[]", Wrapper.treeNodeToString(ot.isPresent() ? ot.get() : null));
     }
 
     @Test
     public void testRound() {
-        assertEquals("[1]", Wrapper.treeNodeToString(Wrapper.stringToTreeNode("[1]")));
-        assertEquals("[1,2,3]", Wrapper.treeNodeToString(Wrapper.stringToTreeNode("[1,2,3]")));
+        assertEquals("[1]", Wrapper.treeNodeToString(Wrapper.stringToTreeNode("[1]").get()));
+        assertEquals("[1,2,3]", Wrapper.treeNodeToString(Wrapper.stringToTreeNode("[1,2,3]").get()));
     }
 
     @Test
     public void testRoundNull() {
-        assertEquals("[1,null,3]", Wrapper.treeNodeToString(Wrapper.stringToTreeNode("[1,null,3]")));
+        assertEquals("[1,null,3]", Wrapper.treeNodeToString(Wrapper.stringToTreeNode("[1,null,3]").get()));
     }
 
     @Test

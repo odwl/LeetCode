@@ -17,49 +17,49 @@ public class InvertTree {
 
     @Test()
     public void testEmpty(){
-        TreeNode root = Wrapper.stringToTreeNode("[]");
+        TreeNode root = Wrapper.stringToTreeNode("[]").get();
         assertEquals("[]", Wrapper.treeNodeToString(invertTree(root)));
     }
 
     @Test()
     public void testSingle(){
-        TreeNode root = Wrapper.stringToTreeNode("[1]");
+        TreeNode root = Wrapper.stringToTreeNode("[1]").get();
         assertEquals("[1]", Wrapper.treeNodeToString(invertTree(root)));
     }
 
     @Test()
     public void testTwo(){
-        TreeNode root = Wrapper.stringToTreeNode("[1,null,2]");
+        TreeNode root = Wrapper.stringToTreeNode("[1,null,2]").get();
         assertEquals("[1,2,null]", Wrapper.treeNodeToString(invertTree(root)));
     }
 
     @Test()
     public void testTwoBis(){
-        TreeNode root = Wrapper.stringToTreeNode("[1,2]");
+        TreeNode root = Wrapper.stringToTreeNode("[1,2]").get();
         assertEquals("[1,null,2]", Wrapper.treeNodeToString(invertTree(root)));
     }
 
     @Test()
     public void testThree(){
-        TreeNode root = Wrapper.stringToTreeNode("[4,2,1]");
+        TreeNode root = Wrapper.stringToTreeNode("[4,2,1]").get();
         assertEquals("[4,1,2]", Wrapper.treeNodeToString(invertTree(root)));
 
-        root = Wrapper.stringToTreeNode("[4,null,1]");
+        root = Wrapper.stringToTreeNode("[4,null,1]").get();
         assertEquals("[4,1,null]", Wrapper.treeNodeToString(invertTree(root)));
 
-        root = Wrapper.stringToTreeNode("[4,1]");
+        root = Wrapper.stringToTreeNode("[4,1]").get();
         assertEquals("[4,null,1]", Wrapper.treeNodeToString(invertTree(root)));
     }
 
     @Test()
     public void testFour(){
-        TreeNode root = Wrapper.stringToTreeNode("[4,2,1,3]");
+        TreeNode root = Wrapper.stringToTreeNode("[4,2,1,3]").get();
         assertEquals("[4,1,2,null,null,null,3]", Wrapper.treeNodeToString(invertTree(root)));
     }
 
     @Test()
     public void testMerge(){
-        TreeNode root = Wrapper.stringToTreeNode("[4,2,1,3,7,6,9]");
+        TreeNode root = Wrapper.stringToTreeNode("[4,2,1,3,7,6,9]").get();
         assertEquals("[4,7,9,6,2,3,1]",
                 Wrapper.treeNodeToString(invertTree(root)));
     }

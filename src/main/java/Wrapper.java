@@ -29,34 +29,32 @@ class Wrapper {
                 .collect(Collectors.joining(",", "[", "]"));
     }
 
-    public static TreeNode arrayToTreeNode(List<Optional<Integer>> input) {
+    public static Optional<TreeNode> arrayToTreeNode(List<Optional<Integer>> input) {
         if (input.size() == 0) {
-            return null;
+            return Optional.ofNullable(null);
         }
 
-        List<Optional<TreeNode>> inputQueue = input.stream()
-                .map(ot -> ot.map(TreeNode::new)).toList();
+        LinkedList<Optional<TreeNode>> inputQueue = input.stream()
+                .map(ot -> ot.map(TreeNode::new))
+                .collect(Collectors.toCollection(LinkedList::new));
 
-        TreeNode root = inputQueue.get(0).get();
+        TreeNode root = inputQueue.poll().get();
         Queue<TreeNode> nodeQueue = new LinkedList<>(List.of(root));
 
+        while (!inputQueue.isEmpty()) {
+            TreeNode parent = nodeQueue.remove();
+            Stream<Consumer<TreeNode>> setters = Stream.of(parent::setLeft, parent::setRight);
 
-        int index = 1;
-        while (index < inputQueue.size()) {
-            TreeNode node = nodeQueue.remove();
-
-            Stream<Consumer<TreeNode>> list = Stream.of(node::setLeft, node::setRight);
-            Stream<Optional<TreeNode>> children = inputQueue.subList(index, Math.min(index + 2, input.size())).stream();
-
-            Streams.forEachPair(list, children, (consumer, child) ->
+            Streams.forEachPair(setters, inputQueue.stream(), (consumer, child) ->
                     child.ifPresent(consumer.andThen(nodeQueue::add)));
-            index += 2;
+
+            Stream.generate(inputQueue::poll).limit(2).count();
         }
-        return root;
+        return Optional.of(root);
     }
 
-    public static TreeNode stringToTreeNode(String input) {
-        if (input == "[]") return null;
+    public static Optional<TreeNode> stringToTreeNode(String input) {
+        if (input == "[]") return Optional.empty();
 
         List<Optional<Integer>> nodeList = Pattern.compile(",")
                 .splitAsStream(input.substring(1, input.length() - 1))
