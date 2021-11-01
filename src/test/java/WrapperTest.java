@@ -2,8 +2,10 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -44,7 +46,7 @@ public class WrapperTest {
 
     @Test
     public void testToTreeFourInt() {
-        TreeNode root = Wrapper.arrayToTreeNode(List.of(4,2,1,3));
+        TreeNode root = Wrapper.arrayToTreeNode(Stream.of(4,2,1,3).map(Optional::of).toList());
         assertEquals(4, root.val);
         assertEquals(2, root.left.val);
         assertEquals(1, root.right.val);

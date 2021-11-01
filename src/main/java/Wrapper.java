@@ -1,18 +1,14 @@
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
+import com.google.common.primitives.Ints;
 import org.antlr.v4.runtime.tree.Tree;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import java.lang.Math;
 
 class Wrapper {
 
@@ -33,86 +29,40 @@ class Wrapper {
                 .collect(Collectors.joining(",", "[", "]"));
     }
 
-    public static TreeNode arrayToTreeNode(List<Integer> input) {
+    public static TreeNode arrayToTreeNode(List<Optional<Integer>> input) {
         if (input.size() == 0) {
             return null;
         }
 
-        List<Integer> parts = input;
-        int item = parts.get(0);
-        TreeNode root = new TreeNode(item);
-        Queue<TreeNode> nodeQueue = new LinkedList<>();
-        nodeQueue.add(root);
+        List<Optional<TreeNode>> inputQueue = input.stream()
+                .map(ot -> ot.map(TreeNode::new)).toList();
+
+        TreeNode root = inputQueue.get(0).get();
+        Queue<TreeNode> nodeQueue = new LinkedList<>(List.of(root));
+
 
         int index = 1;
-        while (!nodeQueue.isEmpty()) {
+        while (index < inputQueue.size()) {
             TreeNode node = nodeQueue.remove();
 
-            List<Entry> list = new ArrayList<>();
-            if (index < parts.size()) {
-                list.add(new Entry(node::getLeft, node::setLeft, new TreeNode(parts.get(index++))));
-            }
-            if (index < parts.size()) {
-                list.add(new Entry(node::getRight, node::setRight, new TreeNode(parts.get(index++))));
-            }
+            Stream<Consumer<TreeNode>> list = Stream.of(node::setLeft, node::setRight);
+            Stream<Optional<TreeNode>> children = inputQueue.subList(index, Math.min(index + 2, input.size())).stream();
 
-            for (Entry entry: list) {
-                entry.operation.accept(entry.toAdd);
-                nodeQueue.add(entry.getOperation.get());
-            }
-
+            Streams.forEachPair(list, children, (consumer, child) ->
+                    child.ifPresent(consumer.andThen(nodeQueue::add)));
+            index += 2;
         }
         return root;
-    }
-
-    public static class Entry {
-
-        public Entry(Supplier<TreeNode> getOperation, Consumer<TreeNode> operation, TreeNode toAdd) {
-            this.getOperation = getOperation;
-            this.operation = operation;
-            this.toAdd = toAdd;
-        }
-
-        Supplier<TreeNode> getOperation;
-        Consumer<TreeNode> operation;
-        TreeNode toAdd;
-
     }
 
     public static TreeNode stringToTreeNode(String input) {
         if (input == "[]") return null;
 
-        List<TreeNode> nodeList = Pattern.compile(",")
+        List<Optional<Integer>> nodeList = Pattern.compile(",")
                 .splitAsStream(input.substring(1, input.length() - 1))
-                .map(s -> s.equals("null") ? null : new TreeNode(Integer.parseInt(s)))
+                .map(s -> Optional.ofNullable(Ints.tryParse(s)))
                 .collect(Collectors.toList());
-
-        List<Stream<TreeNode>> floors = IntStream.range(0, nodeList.size())
-                .boxed()
-                .collect(Collectors.groupingBy(i -> Math.ceil(Math.log(i + 2) / Math.log(2))))
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(Map.Entry::getValue)
-                .map(l -> l.stream().map(nodeList::get))
-                .collect(Collectors.toList());
-
-        TreeNode first = floors.get(0).findFirst().get();
-        floors.remove(0);
-
-        Stream<Consumer<TreeNode>> funct = Stream.of(first::setLeft, first::setRight);
-        for (Stream<TreeNode> toAdd : floors) {
-            List<Consumer<TreeNode>> newQueue = new ArrayList<>();
-            Streams.forEachPair(funct, toAdd, (f1,n) -> {
-                if (n != null) {
-                    f1.accept(n);
-                    Collections.addAll(newQueue, n::setLeft, n::setRight);
-                }
-            });
-
-            funct = newQueue.stream();
-        }
-        return first;
+        return arrayToTreeNode(nodeList);
     }
 
     public static void prettyPrintTree(TreeNode node, String prefix, boolean isLeft) {

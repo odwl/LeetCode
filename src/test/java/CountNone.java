@@ -5,6 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -46,7 +47,7 @@ public class CountNone {
         int size = 10000000;
         Random random = new Random();
         int[] data = random.ints(size).toArray();
-        TreeNode root = Wrapper.arrayToTreeNode(IntStream.of(data).boxed().toList());
+        TreeNode root = Wrapper.arrayToTreeNode(IntStream.of(data).mapToObj(Optional::of).toList());
     }
 
 
