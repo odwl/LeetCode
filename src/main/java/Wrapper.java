@@ -46,8 +46,7 @@ class Wrapper {
             Stream<Consumer<TreeNode>> setters = Stream.of(parent::setLeft, parent::setRight);
 
             Streams.forEachPair(
-                    setters,
-                    inputQueue.stream(),
+                    setters, inputQueue.stream(),
                     (consumer, child) -> child.ifPresent(consumer.andThen(nodeQueue::add)));
 
             Stream.generate(inputQueue::poll).limit(2).count();
