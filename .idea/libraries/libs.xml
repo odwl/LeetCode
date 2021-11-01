@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/jacococli.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/antlr4-annotations-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jacocoagent.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/JavaGrading.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/org.abego.treelayout.core-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/hamcrest-core-1.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/digraph-parser-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/junit-4.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/antlr4-runtime-4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/cfg-1.0-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/guava-30.1.1-jre.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
