@@ -17,7 +17,7 @@ class Wrapper {
         if (root.left == null && root.right == null) return Stream.of(root.val);
 
         return Stream.of(root.left, root.right)
-                .map(node -> nodeToSring(node))
+                .map(Wrapper::nodeToSring)
                 .reduce(Stream.of(root.val), Stream::concat);
     }
 
@@ -31,7 +31,7 @@ class Wrapper {
 
     public static Optional<TreeNode> arrayToTreeNode(List<Optional<Integer>> input) {
         if (input.size() == 0) {
-            return Optional.ofNullable(null);
+            return Optional.empty();
         }
 
         LinkedList<Optional<TreeNode>> inputQueue = input.stream()
@@ -54,7 +54,7 @@ class Wrapper {
     }
 
     public static Optional<TreeNode> stringToTreeNode(String input) {
-        if (input == "[]") return Optional.empty();
+        if (input.equals("[]")) return Optional.empty();
 
         List<Optional<Integer>> nodeList = Pattern.compile(",")
                 .splitAsStream(input.substring(1, input.length() - 1))
