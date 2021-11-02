@@ -13,13 +13,13 @@ public class TreeNodeTest {
         TreeNode root;
 
         root = Wrapper.arrayToTreeNode(Stream.of(2).map(Optional::of).toList()).get();
-        assertEquals(List.of(2), root.parseFloor().map(Optional::get).toList());
+        assertEquals(List.of(2), root.parseFloor().stream().map(Optional::get).toList());
 
         root = Wrapper.arrayToTreeNode(Stream.of(2, 3).map(Optional::of).toList()).get();
-        assertEquals(List.of(2, 3), root.parseFloor().map(Optional::get).toList());
+        assertEquals(List.of(2, 3), root.parseFloor().stream().map(Optional::get).toList());
 
         root = Wrapper.arrayToTreeNode(Stream.of(4, 2, 1, 3).map(Optional::of).toList()).get();
-        assertEquals(List.of(4, 2, 1, 3), root.parseFloor().map(Optional::get).toList());
+        assertEquals(List.of(4, 2, 1, 3), root.parseFloor().stream().map(Optional::get).toList());
 
     }
 

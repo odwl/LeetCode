@@ -14,8 +14,8 @@ public class TreeNode {
           this.right = right;
       }
 
-    protected Stream<Optional<Integer>> parseFloor() {
-        if (this == null) return Stream.of();
+    public List<Optional<Integer>> parseFloor() {
+        if (this == null) return List.of();
 
         List<Optional<Integer>> result = new ArrayList();
         Queue<Optional<TreeNode>> remaining = new LinkedList<>(List.of(Optional.of(this)));
@@ -35,13 +35,13 @@ public class TreeNode {
                 countNull--;
             }
         }
-        return result.stream();
+        return result;
     }
 
     public String toString() {
         if (this == null) return "[]";
 
-        return this.parseFloor()
+        return this.parseFloor().stream()
                 .map(i -> i.isPresent() ? i.get().toString(): null)
                 .collect(Collectors.joining(",", "[", "]"));
     }
