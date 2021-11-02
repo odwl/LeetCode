@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 
 public class InvertTree {
@@ -17,7 +19,9 @@ public class InvertTree {
 
     @Test()
     public void testEmpty(){
-        TreeNode root = Wrapper.stringToTreeNode("[]").get();
+
+        Optional<TreeNode> ot = Wrapper.stringToTreeNode("[]");
+        TreeNode root = ot.isPresent() ? ot.get() : null;
         assertEquals("[]", Wrapper.treeNodeToString(invertTree(root)));
     }
 

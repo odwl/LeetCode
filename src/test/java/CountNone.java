@@ -31,25 +31,23 @@ public class CountNone {
         TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4,5,6]").get();
         assertEquals(6, countNode(root));
 
-        root = Wrapper.stringToTreeNode("[]").get();
+        Optional<TreeNode> ot = Wrapper.stringToTreeNode("[]");
+        root = ot.isPresent() ? ot.get() : null;
         assertEquals(0, countNode(root));
 
         root = Wrapper.stringToTreeNode("[1]").get();
         assertEquals(1, countNode(root));
-
-//        Wrapper.prettyPrintTree(root)
     }
 
     private static int size;
     private static TreeNode root;
     @BeforeClass
     public static void before(){
-        int size = 10000000;
+        size = 10000000;
         Random random = new Random();
         int[] data = random.ints(size).toArray();
         root = Wrapper.arrayToTreeNode(IntStream.of(data).mapToObj(Optional::of).toList()).get();
     }
-
 
     @Test()
     public void testBig() {
