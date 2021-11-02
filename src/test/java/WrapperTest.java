@@ -61,13 +61,13 @@ public class WrapperTest {
         TreeNode root;
 
         root = Wrapper.arrayToTreeNode(Stream.of(2).map(Optional::of).toList()).get();
-        assertEquals(List.of(2), Wrapper.parseFloor(root).toList());
+        assertEquals(List.of(2), Wrapper.parseFloor(root).map(Optional::get).toList());
 
         root = Wrapper.arrayToTreeNode(Stream.of(2, 3).map(Optional::of).toList()).get();
-        assertEquals(List.of(2, 3), Wrapper.parseFloor(root).toList());
+        assertEquals(List.of(2, 3), Wrapper.parseFloor(root).map(Optional::get).toList());
 
         root = Wrapper.arrayToTreeNode(Stream.of(4, 2, 1, 3).map(Optional::of).toList()).get();
-        assertEquals(List.of(4, 2, 1, 3), Wrapper.parseFloor(root).toList());
+        assertEquals(List.of(4, 2, 1, 3), Wrapper.parseFloor(root).map(Optional::get).toList());
 
     }
 

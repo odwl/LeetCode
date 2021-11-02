@@ -10,26 +10,30 @@ import java.util.stream.Stream;
 
 class Wrapper {
 
-    public static Stream<Integer> parseFloor(TreeNode root) {
+    public static Stream<Optional<Integer>> parseFloor(TreeNode root) {
         if (root == null) return Stream.of();
 
-        List<Integer> result = new ArrayList();
+        List<Optional<Integer>> result = new ArrayList();
         Queue<TreeNode> remaining = new LinkedList<>(List.of(root));
+        int countNull = 0;
 
-        while (!remaining.isEmpty()) {
+        while (!remaining.isEmpty() && remaining.size() > countNull) {
             TreeNode node = remaining.poll();
             if (node != null) {
-                result.add(node.val);
+                result.add(Optional.of(node.val));
                 remaining.add(node.left == null ? null : node.left);
                 remaining.add(node.right == null ? null : node.right);
+                if (node.left == null) countNull++;
+                if (node.right == null) countNull++;
             } else {
-                result.add(-1);
+                countNull--;
+                result.add(Optional.empty());
             }
         }
 
-        while (result.get(result.size() -1) == -1) {
-            result.remove(result.size()-1);
-        }
+//        while (result.get(result.size() -1).isEmpty()) {
+//            result.remove(result.size()-1);
+//        }
         return result.stream();
     }
 
@@ -37,7 +41,7 @@ class Wrapper {
         if (root == null) return "[]";
 
         return parseFloor(root)
-                .map(i -> i == -1 ? "null" : i.toString())
+                .map(i -> i.isPresent() ? i.get().toString(): null)
                 .collect(Collectors.joining(",", "[", "]"));
     }
 
