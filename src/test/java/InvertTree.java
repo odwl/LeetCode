@@ -10,8 +10,8 @@ public class InvertTree {
         if (root == null) return root;
         if (root.left == null && root.right == null) return root;
 
-        TreeNode tmp = root.left;
-        root.left = root.right;
+        TreeNode tmp = invertTree(root.left);
+        root.left = invertTree(root.right);
         root.right = tmp;
 
         return root;
@@ -59,12 +59,21 @@ public class InvertTree {
     public void testFour(){
         TreeNode root = Wrapper.stringToTreeNode("[4,2,1,3]").get();
         assertEquals("[4,1,2,null,null,null,3]", Wrapper.treeNodeToString(invertTree(root)));
+
+        root = Wrapper.stringToTreeNode("[4,2,1,null,3]").get();
+        assertEquals("[4,1,2,null,null,3]", Wrapper.treeNodeToString(invertTree(root)));
+
+        root = Wrapper.stringToTreeNode("[4,2,1,null,null,3]").get();
+        assertEquals("[4,1,2,null,3]", Wrapper.treeNodeToString(invertTree(root)));
+
+        root = Wrapper.stringToTreeNode("[4,2,1,null,null,null,3]").get();
+        assertEquals("[4,1,2,3]", Wrapper.treeNodeToString(invertTree(root)));
     }
 
     @Test()
     public void testMerge(){
         TreeNode root = Wrapper.stringToTreeNode("[4,2,1,3,7,6,9]").get();
-        assertEquals("[4,7,9,6,2,3,1]",
+        assertEquals("[4,1,2,9,6,7,3]",
                 Wrapper.treeNodeToString(invertTree(root)));
     }
 }
