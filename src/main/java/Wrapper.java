@@ -1,30 +1,42 @@
 import com.google.common.collect.Streams;
 import com.google.common.primitives.Ints;
-import org.antlr.v4.runtime.tree.Tree;
 
-import javax.swing.text.html.Option;
+import java.sql.Array;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 class Wrapper {
 
-    private static Stream<Integer> nodeToSring(TreeNode root) {
-        if (root == null) return Stream.of(-1);
-        if (root.left == null && root.right == null) return Stream.of(root.val);
+    public static Stream<Integer> parseFloor(TreeNode root) {
+        if (root == null) return Stream.of();
 
-        return Stream.of(root.left, root.right)
-                .map(Wrapper::nodeToSring)
-                .reduce(Stream.of(root.val), Stream::concat);
+        List<Integer> result = new ArrayList();
+        Queue<TreeNode> remaining = new LinkedList<>(List.of(root));
+
+        while (!remaining.isEmpty()) {
+            TreeNode node = remaining.poll();
+            if (node != null) {
+                result.add(node.val);
+                remaining.add(node.left == null ? null : node.left);
+                remaining.add(node.right == null ? null : node.right);
+            } else {
+                result.add(-1);
+            }
+        }
+
+        while (result.get(result.size() -1) == -1) {
+            result.remove(result.size()-1);
+        }
+        return result.stream();
     }
 
     public static String treeNodeToString(TreeNode root) {
         if (root == null) return "[]";
 
-        return nodeToSring(root)
+        return parseFloor(root)
                 .map(i -> i == -1 ? "null" : i.toString())
                 .collect(Collectors.joining(",", "[", "]"));
     }

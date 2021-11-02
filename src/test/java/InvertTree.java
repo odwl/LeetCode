@@ -34,7 +34,7 @@ public class InvertTree {
     @Test()
     public void testTwo(){
         TreeNode root = Wrapper.stringToTreeNode("[1,null,2]").get();
-        assertEquals("[1,2,null]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[1,2]", Wrapper.treeNodeToString(invertTree(root)));
     }
 
     @Test()
@@ -49,7 +49,7 @@ public class InvertTree {
         assertEquals("[4,1,2]", Wrapper.treeNodeToString(invertTree(root)));
 
         root = Wrapper.stringToTreeNode("[4,null,1]").get();
-        assertEquals("[4,1,null]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[4,1]", Wrapper.treeNodeToString(invertTree(root)));
 
         root = Wrapper.stringToTreeNode("[4,1]").get();
         assertEquals("[4,null,1]", Wrapper.treeNodeToString(invertTree(root)));
