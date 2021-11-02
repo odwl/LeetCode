@@ -80,22 +80,27 @@ public class TreeNodeTest {
         root2 = Wrapper.stringToTreeNode("[1,null,2]").get();
         merge = root1.merge(root2);
         assertEquals("[2,1,3]", merge.toString());
+
+        root1 = Wrapper.stringToTreeNode("[1,1,1]").get();
+        root2 = null;
+        merge = root1.merge(root2);
+        assertEquals("[1,1,1]", merge.toString());
     }
 
     @Test
     public void testGetChildren() {
         TreeNode root;
         root = new TreeNode(1);
-        assertTrue(root.getChildren().toList().isEmpty());
+        assertTrue(root.getPresentChildren().toList().isEmpty());
 
         root = new TreeNode(1, new TreeNode(2), null);
-        Iterators.elementsEqual(List.of(new TreeNode(2)).iterator(), root.getChildren().iterator());
+        Iterators.elementsEqual(List.of(new TreeNode(2)).iterator(), root.getPresentChildren().iterator());
 
         root = new TreeNode(1, null, new TreeNode(2));
-        Iterators.elementsEqual(List.of(new TreeNode(2)).iterator(), root.getChildren().iterator());
+        Iterators.elementsEqual(List.of(new TreeNode(2)).iterator(), root.getPresentChildren().iterator());
 
         root = Wrapper.stringToTreeNode("[1,2,3]").get();
-        List<TreeNode> list = root.getChildren().toList();
+        List<TreeNode> list = root.getPresentChildren().toList();
         Iterators.elementsEqual(List.of(new TreeNode(2)).iterator(), list.iterator());
     }
 

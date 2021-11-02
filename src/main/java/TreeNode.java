@@ -1,3 +1,7 @@
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Streams;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,6 +48,7 @@ public class TreeNode {
         return result;
     }
 
+    @Override
     public String toString() {
         if (this == null) return "[]";
 
@@ -72,15 +77,15 @@ public class TreeNode {
         this.right = right;
     }
 
-    public Stream<TreeNode> getChildren(){
-        return List.of(Optional.ofNullable(this.left), Optional.ofNullable(this.right))
-                .stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get);
+    public Stream<TreeNode> getPresentChildren() {
+        return getAllChildren().filter(Optional::isPresent).map(Optional::get);
+    }
+
+    public Stream<Optional<TreeNode>> getAllChildren() {
+        return Stream.of(Optional.ofNullable(this.left), Optional.ofNullable(this.right));
     }
 
     public TreeNode invert() {
-        if (this == null) return this;
         if (this.left == null && this.right == null) return this;
 
         TreeNode tmp = this.left != null ? this.left.invert() : null;
@@ -90,29 +95,26 @@ public class TreeNode {
         return this;
     }
 
-    public boolean equals(TreeNode node) {
-        if (this.val != node.val) return false;
-
-        if ((this.left == null && node.left != null) || (this.left != null && node.left == null)) return false;
-        if ((this.right == null && node.right != null) || (this.right != null && node.right == null)) return false;
-        if (!((this.left == null && node.left == null) || this.left.equals(node.left))) return false;
-
-        return (this.right == null && node.right == null) || this.right.equals(node.right);
+    @Override
+    public boolean equals(Object node) {
+        if (node == null || this.val != ((TreeNode) node).val) return false;
+        return Iterators.elementsEqual(this.getAllChildren().iterator(), ((TreeNode) node).getAllChildren().iterator());
     }
 
     public TreeNode merge(TreeNode node) {
+        if (node == null) return this;
         TreeNode merge = new TreeNode(this.val + node.val);
 
-        if (this.left != null && node.left !=null) merge.left = this.left.merge(node.left);
+        if (this.left != null && node.left != null) merge.left = this.left.merge(node.left);
         else merge.left = (this.left == null) ? node.left : this.left;
 
-        if (this.right != null && node.right !=null) merge.right = this.left.merge(node.right);
+        if (this.right != null && node.right != null) merge.right = this.left.merge(node.right);
         else merge.right = (this.right == null) ? node.right : this.right;
 
         return merge;
     }
 
     public Stream<TreeNode> inOrderParse() {
-        return Stream.concat(Stream.of(this), this.getChildren().flatMap(TreeNode::inOrderParse));
+        return Stream.concat(Stream.of(this), this.getPresentChildren().flatMap(TreeNode::inOrderParse));
     }
 }
