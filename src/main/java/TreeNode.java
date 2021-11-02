@@ -1,3 +1,7 @@
+import org.antlr.v4.runtime.tree.Tree;
+
+import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 public class TreeNode {
@@ -32,6 +36,15 @@ public class TreeNode {
         this.right = right;
     }
 
+    public TreeNode invert() {
+        if (this == null) return this;
+        if (this.left == null && this.right == null) return this;
 
+        TreeNode tmp = this.left != null ? this.left.invert() : null;
+        this.left = this.right != null ? this.right.invert() : null;
+        this.right = tmp;
+
+        return this;
+    }
 
 }

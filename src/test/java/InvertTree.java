@@ -6,74 +6,55 @@ import static org.junit.Assert.assertEquals;
 
 public class InvertTree {
 
-    public TreeNode invertTree(TreeNode root) {
-        if (root == null) return root;
-        if (root.left == null && root.right == null) return root;
-
-        TreeNode tmp = invertTree(root.left);
-        root.left = invertTree(root.right);
-        root.right = tmp;
-
-        return root;
-    }
-
-    @Test()
-    public void testEmpty(){
-
-        Optional<TreeNode> ot = Wrapper.stringToTreeNode("[]");
-        TreeNode root = ot.isPresent() ? ot.get() : null;
-        assertEquals("[]", Wrapper.treeNodeToString(invertTree(root)));
-    }
-
     @Test()
     public void testSingle(){
         TreeNode root = Wrapper.stringToTreeNode("[1]").get();
-        assertEquals("[1]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[1]", Wrapper.treeNodeToString(root.invert()));
     }
 
     @Test()
     public void testTwo(){
         TreeNode root = Wrapper.stringToTreeNode("[1,null,2]").get();
-        assertEquals("[1,2]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[1,2]", Wrapper.treeNodeToString(root.invert()));
     }
 
     @Test()
     public void testTwoBis(){
         TreeNode root = Wrapper.stringToTreeNode("[1,2]").get();
-        assertEquals("[1,null,2]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[1,null,2]", Wrapper.treeNodeToString(root.invert()));
     }
 
     @Test()
     public void testThree(){
         TreeNode root = Wrapper.stringToTreeNode("[4,2,1]").get();
-        assertEquals("[4,1,2]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[4,1,2]", Wrapper.treeNodeToString(root.invert()));
 
         root = Wrapper.stringToTreeNode("[4,null,1]").get();
-        assertEquals("[4,1]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[4,1]", Wrapper.treeNodeToString(root.invert()));
 
         root = Wrapper.stringToTreeNode("[4,1]").get();
-        assertEquals("[4,null,1]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[4,null,1]", Wrapper.treeNodeToString(root.invert()));
     }
 
     @Test()
     public void testFour(){
         TreeNode root = Wrapper.stringToTreeNode("[4,2,1,3]").get();
-        assertEquals("[4,1,2,null,null,null,3]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[4,1,2,null,null,null,3]", Wrapper.treeNodeToString(root.invert()));
 
         root = Wrapper.stringToTreeNode("[4,2,1,null,3]").get();
-        assertEquals("[4,1,2,null,null,3]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[4,1,2,null,null,3]", Wrapper.treeNodeToString(root.invert()));
 
         root = Wrapper.stringToTreeNode("[4,2,1,null,null,3]").get();
-        assertEquals("[4,1,2,null,3]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[4,1,2,null,3]", Wrapper.treeNodeToString(root.invert()));
 
         root = Wrapper.stringToTreeNode("[4,2,1,null,null,null,3]").get();
-        assertEquals("[4,1,2,3]", Wrapper.treeNodeToString(invertTree(root)));
+        assertEquals("[4,1,2,3]", Wrapper.treeNodeToString(root.invert()));
     }
 
     @Test()
     public void testMerge(){
         TreeNode root = Wrapper.stringToTreeNode("[4,2,1,3,7,6,9]").get();
         assertEquals("[4,1,2,9,6,7,3]",
-                Wrapper.treeNodeToString(invertTree(root)));
+                Wrapper.treeNodeToString(root.invert()));
     }
 }
