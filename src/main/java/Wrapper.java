@@ -14,26 +14,23 @@ class Wrapper {
         if (root == null) return Stream.of();
 
         List<Optional<Integer>> result = new ArrayList();
-        Queue<TreeNode> remaining = new LinkedList<>(List.of(root));
+        Queue<Optional<TreeNode>> remaining = new LinkedList<>(List.of(Optional.of(root)));
         int countNull = 0;
 
         while (!remaining.isEmpty() && remaining.size() > countNull) {
-            TreeNode node = remaining.poll();
-            if (node != null) {
-                result.add(Optional.of(node.val));
-                remaining.add(node.left == null ? null : node.left);
-                remaining.add(node.right == null ? null : node.right);
+            Optional<TreeNode> on = remaining.poll();
+            result.add(on.map(TreeNode::getVal));
+
+            if (on.isPresent()) {
+                TreeNode node = on.get();
+                remaining.add(Optional.ofNullable(node.left));
+                remaining.add(Optional.ofNullable(node.right));
                 if (node.left == null) countNull++;
                 if (node.right == null) countNull++;
             } else {
                 countNull--;
-                result.add(Optional.empty());
             }
         }
-
-//        while (result.get(result.size() -1).isEmpty()) {
-//            result.remove(result.size()-1);
-//        }
         return result.stream();
     }
 
