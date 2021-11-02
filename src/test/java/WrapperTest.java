@@ -52,24 +52,11 @@ public class WrapperTest {
         assertEquals(1, root.right.val);
         assertEquals(3, root.left.left.val);
 
-        String back = Wrapper.treeNodeToString(root);
+        String back = root.toString();
         assertEquals("[4,2,1,3]", back);
     }
 
-    @Test
-    public void testParseFloor() {
-        TreeNode root;
 
-        root = Wrapper.arrayToTreeNode(Stream.of(2).map(Optional::of).toList()).get();
-        assertEquals(List.of(2), Wrapper.parseFloor(root).map(Optional::get).toList());
-
-        root = Wrapper.arrayToTreeNode(Stream.of(2, 3).map(Optional::of).toList()).get();
-        assertEquals(List.of(2, 3), Wrapper.parseFloor(root).map(Optional::get).toList());
-
-        root = Wrapper.arrayToTreeNode(Stream.of(4, 2, 1, 3).map(Optional::of).toList()).get();
-        assertEquals(List.of(4, 2, 1, 3), Wrapper.parseFloor(root).map(Optional::get).toList());
-
-    }
 
     public static int[] countAlphabet(String s) {
         int[] arr = new int[26];
@@ -110,29 +97,6 @@ public class WrapperTest {
         assertTrue(isAnagram("Madam Curie", "Radium came"));
         assertTrue(isAnagram("Madam Curie", "aRidmuc mae"));
         assertFalse(isAnagram("Madam Curie", "aRidmuc mad"));
-    }
-
-    @Test
-    public void testToStringOne() {
-        TreeNode root = new TreeNode(1);
-        assertEquals("[1]", Wrapper.treeNodeToString(root));
-    }
-
-    @Test
-    public void testRoundEmpty() {
-        Optional<TreeNode> ot = Wrapper.stringToTreeNode("[]");
-        assertEquals("[]", Wrapper.treeNodeToString(ot.isPresent() ? ot.get() : null));
-    }
-
-    @Test
-    public void testRound() {
-        assertEquals("[1]", Wrapper.treeNodeToString(Wrapper.stringToTreeNode("[1]").get()));
-        assertEquals("[1,2,3]", Wrapper.treeNodeToString(Wrapper.stringToTreeNode("[1,2,3]").get()));
-    }
-
-    @Test
-    public void testRoundNull() {
-        assertEquals("[1,null,3]", Wrapper.treeNodeToString(Wrapper.stringToTreeNode("[1,null,3]").get()));
     }
 
     @Test

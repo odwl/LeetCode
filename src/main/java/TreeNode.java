@@ -1,8 +1,6 @@
-import org.antlr.v4.runtime.tree.Tree;
-
-import javax.swing.text.html.Option;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TreeNode {
       int val;
@@ -15,6 +13,38 @@ public class TreeNode {
           this.left = left;
           this.right = right;
       }
+
+    protected Stream<Optional<Integer>> parseFloor() {
+        if (this == null) return Stream.of();
+
+        List<Optional<Integer>> result = new ArrayList();
+        Queue<Optional<TreeNode>> remaining = new LinkedList<>(List.of(Optional.of(this)));
+        int countNull = 0;
+
+        while (!remaining.isEmpty() && remaining.size() > countNull) {
+            Optional<TreeNode> on = remaining.poll();
+            result.add(on.map(TreeNode::getVal));
+
+            if (on.isPresent()) {
+                TreeNode node = on.get();
+                remaining.add(Optional.ofNullable(node.left));
+                remaining.add(Optional.ofNullable(node.right));
+                if (node.left == null) countNull++;
+                if (node.right == null) countNull++;
+            } else {
+                countNull--;
+            }
+        }
+        return result.stream();
+    }
+
+    public String toString() {
+        if (this == null) return "[]";
+
+        return this.parseFloor()
+                .map(i -> i.isPresent() ? i.get().toString(): null)
+                .collect(Collectors.joining(",", "[", "]"));
+    }
 
     public int getVal() {
         return val;
@@ -46,5 +76,7 @@ public class TreeNode {
 
         return this;
     }
+
+
 
 }
