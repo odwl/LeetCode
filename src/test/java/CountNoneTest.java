@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class CountNoneTest {
 
     @Test()
-    public void testMerge() {
+    public void testCountNode() {
 
         TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4,5,6]").get();
         assertEquals(6, root.countNode());
@@ -25,7 +25,7 @@ public class CountNoneTest {
 
     @BeforeClass
     public static void before() {
-        size = 10000000;
+        size = 1000;
         Random random = new Random();
         int[] data = random.ints(size).toArray();
         root = Wrapper.arrayToTreeNode(IntStream.of(data).mapToObj(Optional::of).toList()).get();
@@ -34,10 +34,5 @@ public class CountNoneTest {
     @Test()
     public void testBig() {
         assertEquals(size, root.countNode());
-    }
-
-    @Test()
-    public void testFast() {
-        assertEquals(size, size);
     }
 }

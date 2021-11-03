@@ -1,6 +1,4 @@
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Streams;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,9 +8,6 @@ public class TreeNode {
     int val;
     TreeNode left;
     TreeNode right;
-
-    TreeNode() {
-    }
 
     TreeNode(int val) {
         this.val = val;
