@@ -1,3 +1,4 @@
+import com.google.common.base.Functions;
 import com.google.common.collect.Iterators;
 
 import java.util.*;
@@ -115,5 +116,12 @@ public class TreeNode {
 
     public long countNode() {
         return inOrderParse().count();
+    }
+
+    public Stream<TreeNode> preOrderParse() {
+        Stream<TreeNode> left = this.left == null ? Stream.empty() : this.left.preOrderParse();
+        Stream<TreeNode> right = this.right == null ? Stream.empty() : this.right.preOrderParse();
+        Stream<TreeNode> out = Stream.of(left, Stream.of(this), right).flatMap(Functions.identity());
+        return out;
     }
 }

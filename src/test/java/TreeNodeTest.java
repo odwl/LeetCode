@@ -110,4 +110,11 @@ public class TreeNodeTest {
         Stream<Integer> inOrder = root.inOrderParse().map(TreeNode::getVal);
         assertEquals("[1, 2, 4, 3]", inOrder.toList().toString());
     }
+
+    @Test
+    public void testPreOrder() {
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4]").get();
+        Stream<Integer> inOrder = root.preOrderParse().map(TreeNode::getVal);
+        assertEquals("[4, 2, 1, 3]", inOrder.toList().toString());
+    }
 }
