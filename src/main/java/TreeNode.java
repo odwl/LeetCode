@@ -144,10 +144,17 @@ public class TreeNode {
     public boolean isSymetric() {
         List<TreeNode> children = this.getPresentChildren().toList();
         if (children.size() == 1) return false;
+        if (children.size() == 0) return true;
 
         List<Integer> pre = this.preOrderParse().map(TreeNode::getVal).toList();
         List<Integer> post = this.postOrderParse().map(TreeNode::getVal).collect(Collectors.toList());
         Collections.reverse(post);
-        return Iterators.elementsEqual(pre.iterator(), post.iterator());
+
+
+        List<Integer> leftIn = this.left.inOrderParse().map(TreeNode::getVal).toList();
+        List<Integer> rightIn = this.right.inOrderParse().map(TreeNode::getVal).collect(Collectors.toList());
+        Collections.reverse(rightIn);
+
+        return Iterators.elementsEqual(pre.iterator(), post.iterator()) && Iterators.elementsEqual(leftIn.iterator(), rightIn.iterator());
     }
 }
