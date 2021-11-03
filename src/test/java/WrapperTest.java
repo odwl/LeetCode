@@ -68,7 +68,6 @@ public class WrapperTest {
 
         root = Wrapper.arrayToTreeNode(Stream.of(4, 2, 1, 3).map(Optional::of).toList()).get();
         assertEquals(List.of(4, 2, 1, 3), Wrapper.parseFloor(root).map(Optional::get).toList());
-
     }
 
     public static int[] countAlphabet(String s) {
