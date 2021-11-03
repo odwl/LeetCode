@@ -10,38 +10,6 @@ import java.util.stream.Stream;
 
 class Wrapper {
 
-    public static Stream<Optional<Integer>> parseFloor(TreeNode root) {
-        if (root == null) return Stream.of();
-
-        List<Optional<Integer>> result = new ArrayList();
-        Queue<Optional<TreeNode>> remaining = new LinkedList<>(List.of(Optional.of(root)));
-        int countNull = 0;
-
-        while (!remaining.isEmpty() && remaining.size() > countNull) {
-            Optional<TreeNode> on = remaining.poll();
-            result.add(on.map(TreeNode::getVal));
-
-            if (on.isPresent()) {
-                TreeNode node = on.get();
-                remaining.add(Optional.ofNullable(node.left));
-                remaining.add(Optional.ofNullable(node.right));
-                if (node.left == null) countNull++;
-                if (node.right == null) countNull++;
-            } else {
-                countNull--;
-            }
-        }
-        return result.stream();
-    }
-
-    public static String treeNodeToString(TreeNode root) {
-        if (root == null) return "[]";
-
-        return parseFloor(root)
-                .map(i -> i.isPresent() ? i.get().toString(): null)
-                .collect(Collectors.joining(",", "[", "]"));
-    }
-
     public static Optional<TreeNode> arrayToTreeNode(List<Optional<Integer>> input) {
         if (input.size() == 0) {
             return Optional.empty();
