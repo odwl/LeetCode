@@ -1,8 +1,11 @@
 import com.google.common.base.Functions;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.Streams;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class TreeNode {
@@ -123,5 +126,12 @@ public class TreeNode {
         Stream<TreeNode> right = this.right == null ? Stream.empty() : this.right.preOrderParse();
         Stream<TreeNode> out = Stream.of(left, Stream.of(this), right).flatMap(Functions.identity());
         return out;
+    }
+
+    public int minDifference() {
+        List<Integer> nodes = this.inOrderParse().map(TreeNode::getVal).toList();
+        return Streams.zip(nodes.stream(), nodes.stream().skip(1), (a,b) -> b-a)
+                .min(Integer::compare)
+                .get();
     }
 }
