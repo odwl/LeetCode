@@ -108,14 +108,25 @@ public class TreeNodeTest {
     public void testInOrder() {
         TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4]").get();
         Stream<Integer> inOrder = root.inOrderParse().map(TreeNode::getVal);
-        assertEquals("[1, 2, 4, 3]", inOrder.toList().toString());
+        assertEquals("[4, 2, 1, 3]", inOrder.toList().toString());
     }
 
     @Test
     public void testPreOrder() {
-        TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4]").get();
+        TreeNode root = Wrapper.stringToTreeNode("[2,4]").get();
         Stream<Integer> inOrder = root.preOrderParse().map(TreeNode::getVal);
-        assertEquals("[4, 2, 1, 3]", inOrder.toList().toString());
+        assertEquals("[2, 4]", inOrder.toList().toString());
+
+        root = Wrapper.stringToTreeNode("[1,2,3,4]").get();
+        inOrder = root.preOrderParse().map(TreeNode::getVal);
+        assertEquals("[1, 2, 4, 3]", inOrder.toList().toString());
+    }
+
+    @Test
+    public void testPostOrder() {
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4]").get();
+        Stream<Integer> inOrder = root.postOrderParse().map(TreeNode::getVal);
+        assertEquals("[4, 2, 3, 1]", inOrder.toList().toString());
     }
 
     @Test
@@ -125,5 +136,16 @@ public class TreeNodeTest {
 
         root = Wrapper.stringToTreeNode("[1,3]").get();
         assertEquals(2, root.minDifference());
+    }
+
+    @Test
+    public void testIsSymetric() {
+        assertTrue(Wrapper.stringToTreeNode("[1]").get().isSymetric());
+        assertFalse(Wrapper.stringToTreeNode("[1,2]").get().isSymetric());
+        assertFalse(Wrapper.stringToTreeNode("[1,2,3]").get().isSymetric());
+        assertTrue(Wrapper.stringToTreeNode("[1,2,2]").get().isSymetric());
+        assertTrue(Wrapper.stringToTreeNode("[1,2,2,3,4,4,3]").get().isSymetric());
+        assertFalse(Wrapper.stringToTreeNode("[1,2,2,3,4,4,2]").get().isSymetric());
+        assertFalse(Wrapper.stringToTreeNode("[1,2,2,null,3,null,3]").get().isSymetric());
     }
 }
