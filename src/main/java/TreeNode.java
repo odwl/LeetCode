@@ -48,7 +48,7 @@ public class TreeNode {
         if (this == null) return "[]";
 
         return this.floorParse().stream()
-                .map(i -> i.isPresent() ? i.get().toString() : null)
+                .map(o -> o.map(Object::toString).orElse("null"))
                 .collect(Collectors.joining(",", "[", "]"));
     }
 
