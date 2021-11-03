@@ -117,4 +117,8 @@ public class TreeNode {
     public Stream<TreeNode> inOrderParse() {
         return Stream.concat(Stream.of(this), this.getPresentChildren().flatMap(TreeNode::inOrderParse));
     }
+
+    public long countNode() {
+        return inOrderParse().count();
+    }
 }

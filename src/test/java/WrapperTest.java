@@ -57,7 +57,6 @@ public class WrapperTest {
     }
 
 
-
     public static int[] countAlphabet(String s) {
         int[] arr = new int[26];
         Arrays.fill(arr, 0);
