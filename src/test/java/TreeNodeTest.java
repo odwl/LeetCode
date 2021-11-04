@@ -147,5 +147,37 @@ public class TreeNodeTest {
         assertTrue(Wrapper.stringToTreeNode("[1,2,2,3,4,4,3]").get().isSymetric());
         assertFalse(Wrapper.stringToTreeNode("[1,2,2,3,4,4,2]").get().isSymetric());
         assertFalse(Wrapper.stringToTreeNode("[1,2,2,null,3,null,3]").get().isSymetric());
+        assertFalse(Wrapper.stringToTreeNode("[1,2,2,2,null,2]").get().isSymetric());
+    }
+
+    @Test
+    public void testLeaveNodes() {
+        Stream<TreeNode> treeNodeStream = TreeNode.leaveNodes(Wrapper.stringToTreeNode("[1,2,2,2,null,2]").get());
+        assertEquals(List.of(2,2), treeNodeStream.map(TreeNode::getVal).toList());
+    }
+
+    @Test
+    public void testSumLeaveNodes() {
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,2,2,null,2]").get();
+        assertEquals(4, TreeNode.sumLeaveNodes(root));
+    }
+
+    @Test
+    public void testSumLeftLeaveNodes() {
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,2,2,null,2]").get();
+        assertEquals(4, TreeNode.sumLeftLeaveNodes(root));
+
+        root = Wrapper.stringToTreeNode("[1,2,2,2,2]").get();
+        assertEquals(2, TreeNode.sumLeftLeaveNodes(root));
+
+        root = Wrapper.stringToTreeNode("[1,2,2,2,null,null, 2]").get();
+        assertEquals(2, TreeNode.sumLeftLeaveNodes(root));
+
+        root = Wrapper.stringToTreeNode("[3,9,20,null,null,15,7]").get();
+        assertEquals(24, TreeNode.sumLeftLeaveNodes(root));
+
+        root = Wrapper.stringToTreeNode("[0,2,4,1,null,3,-1,5,1,null,6,null,8]").get();
+        assertEquals(5, TreeNode.sumLeftLeaveNodes(root));
+
     }
 }

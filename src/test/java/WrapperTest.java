@@ -56,7 +56,6 @@ public class WrapperTest {
         assertEquals("[4,2,1,3]", back);
     }
 
-
     public static int[] countAlphabet(String s) {
         int[] arr = new int[26];
         Arrays.fill(arr, 0);

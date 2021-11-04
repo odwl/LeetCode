@@ -1,13 +1,9 @@
 import com.google.common.base.Functions;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Ordering;
 import com.google.common.collect.Streams;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class TreeNode {
@@ -136,25 +132,42 @@ public class TreeNode {
 
     public int minDifference() {
         List<Integer> nodes = this.preOrderParse().map(TreeNode::getVal).toList();
-        return Streams.zip(nodes.stream(), nodes.stream().skip(1), (a,b) -> b-a)
+        return Streams.zip(nodes.stream(), nodes.stream().skip(1), (a, b) -> b - a)
                 .min(Integer::compare)
                 .get();
     }
 
+    private static boolean areSymetric(TreeNode node1, TreeNode node2) {
+        if (node1 == null) return node2 == null;
+        if (node2 == null) return false;
+        if (node1.val != node2.val) return false;
+
+        return areSymetric(node1.left, node2.right) && areSymetric(node1.right, node2.left);
+    }
+
     public boolean isSymetric() {
-        List<TreeNode> children = this.getPresentChildren().toList();
-        if (children.size() == 1) return false;
-        if (children.size() == 0) return true;
+        return areSymetric(this.left, this.right);
+    }
 
-        List<Integer> pre = this.preOrderParse().map(TreeNode::getVal).toList();
-        List<Integer> post = this.postOrderParse().map(TreeNode::getVal).collect(Collectors.toList());
-        Collections.reverse(post);
+    public static Stream<TreeNode> leaveNodes(TreeNode node) {
+        if (node == null) return Stream.empty();
+        if (node.left == null && node.right == null) return Stream.of(node);
 
+        Stream<TreeNode> concat = Stream.concat(leaveNodes(node.left), leaveNodes(node.right));
+        return concat;
+    }
 
-        List<Integer> leftIn = this.left.inOrderParse().map(TreeNode::getVal).toList();
-        List<Integer> rightIn = this.right.inOrderParse().map(TreeNode::getVal).collect(Collectors.toList());
-        Collections.reverse(rightIn);
+    public static int sumLeaveNodes(TreeNode node) {
+        return leaveNodes(node).collect(Collectors.summingInt(TreeNode::getVal));
+    }
 
-        return Iterators.elementsEqual(pre.iterator(), post.iterator()) && Iterators.elementsEqual(leftIn.iterator(), rightIn.iterator());
+    public static Stream<TreeNode> leftLeaveNodes(TreeNode node, boolean fromLeft) {
+        if (node == null) return Stream.empty();
+        if (node.left == null && node.right == null && fromLeft) return Stream.of(node);
+        return Stream.concat(leftLeaveNodes(node.left, true), leftLeaveNodes(node.right, false));
+    }
+
+    public static int sumLeftLeaveNodes(TreeNode node) {
+        return leftLeaveNodes(node, false).collect(Collectors.summingInt(TreeNode::getVal));
     }
 }
