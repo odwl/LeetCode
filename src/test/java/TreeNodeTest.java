@@ -178,6 +178,34 @@ public class TreeNodeTest {
 
         root = Wrapper.stringToTreeNode("[0,2,4,1,null,3,-1,5,1,null,6,null,8]").get();
         assertEquals(5, TreeNode.sumLeftLeaveNodes(root));
+    }
+
+    @Test
+    public void testBottomLeftValue() {
+        TreeNode root;
+
+        root = new TreeNode(0, null, new TreeNode(-1));
+        assertEquals(-1, TreeNode.bottomLeftValue(root));
+
+        root = Wrapper.stringToTreeNode("[2,1,3]").get();
+        assertEquals(1, TreeNode.bottomLeftValue(root));
+
+        root = Wrapper.stringToTreeNode("[2,1,3,4,5]").get();
+        assertEquals(4, TreeNode.bottomLeftValue(root));
+
+        root = Wrapper.stringToTreeNode("[2,1,3,null,5]").get();
+        assertEquals(5, TreeNode.bottomLeftValue(root));
+
+        root = Wrapper.stringToTreeNode("[2,1,3,null,5,6]").get();
+        assertEquals(5, TreeNode.bottomLeftValue(root));
+
+        root = Wrapper.stringToTreeNode("[1,2,3,4,null,5,6,null,null,7]").get();
+        assertEquals(7, TreeNode.bottomLeftValue(root));
+
+
+
+
 
     }
+
 }

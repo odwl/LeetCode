@@ -44,6 +44,14 @@ public class WrapperTest {
         assertEquals(3, root.left.left.val);
     }
 
+
+    @Test
+    public void testStringToNodeProblematic() {
+        TreeNode root = Wrapper.stringToTreeNode(" [0,null,-1]").get();
+        // Add some asserts.
+    }
+
+
     @Test
     public void testToTreeFourInt() {
         TreeNode root = Wrapper.arrayToTreeNode(Stream.of(4, 2, 1, 3).map(Optional::of).toList()).get();

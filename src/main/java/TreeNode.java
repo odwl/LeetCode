@@ -163,11 +163,45 @@ public class TreeNode {
 
     public static Stream<TreeNode> leftLeaveNodes(TreeNode node, boolean fromLeft) {
         if (node == null) return Stream.empty();
-        if (node.left == null && node.right == null && fromLeft) return Stream.of(node);
+        if (node.left == null && node.right == null) return fromLeft ? Stream.of(node) : Stream.empty();
         return Stream.concat(leftLeaveNodes(node.left, true), leftLeaveNodes(node.right, false));
     }
 
     public static int sumLeftLeaveNodes(TreeNode node) {
         return leftLeaveNodes(node, false).collect(Collectors.summingInt(TreeNode::getVal));
+    }
+
+    private static class LeaveNode {
+        int val;
+        int level;
+
+        public LeaveNode(int val, int level) {
+            this.val = val;
+            this.level = level;
+        }
+
+        public static Comparator<LeaveNode> compare() {
+            return new Comparator<LeaveNode>() {
+                @Override
+                public int compare(LeaveNode o1, LeaveNode o2) {
+                    return o1.level == o2.level ? -1 :  o2.level - o1.level;
+                }
+            };
+        }
+    }
+
+    private static Stream<LeaveNode> bottomLeftValue(TreeNode node, int level) {
+        if (node == null) return Stream.empty();
+
+        if (node.left == null && node.right == null)
+            return Stream.of(new LeaveNode(node.val, level));
+
+        Stream<LeaveNode> left = bottomLeftValue(node.left, level + 1);
+        Stream<LeaveNode> right = bottomLeftValue(node.right, level + 1);
+        return Stream.concat(left, right);
+    }
+
+    public static int bottomLeftValue(TreeNode node) {
+        return bottomLeftValue(node, 0).min(LeaveNode.compare()).get().val;
     }
 }
