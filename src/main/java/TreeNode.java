@@ -10,6 +10,7 @@ public class TreeNode {
     int val;
     TreeNode left;
     TreeNode right;
+    private Object node;
 
     TreeNode(int val) {
         this.val = val;
@@ -22,9 +23,7 @@ public class TreeNode {
     }
 
     public List<Optional<Integer>> floorParse() {
-        if (this == null) return List.of();
-
-        List<Optional<Integer>> result = new ArrayList();
+        List<Optional<Integer>> result = new ArrayList<Optional<Integer>>();
         Queue<Optional<TreeNode>> remaining = new LinkedList<>(List.of(Optional.of(this)));
         int countNull = 0;
 
@@ -47,8 +46,6 @@ public class TreeNode {
 
     @Override
     public String toString() {
-        if (this == null) return "[]";
-
         return this.floorParse().stream()
                 .map(o -> o.map(Object::toString).orElse("null"))
                 .collect(Collectors.joining(",", "[", "]"));
@@ -122,8 +119,7 @@ public class TreeNode {
     public Stream<TreeNode> inOrderParse() {
         Stream<TreeNode> left = this.left == null ? Stream.empty() : this.left.inOrderParse();
         Stream<TreeNode> right = this.right == null ? Stream.empty() : this.right.inOrderParse();
-        Stream<TreeNode> out = Stream.of(left, Stream.of(this), right).flatMap(Functions.identity());
-        return out;
+        return Stream.of(left, Stream.of(this), right).flatMap(Functions.identity());
     }
 
     public Stream<TreeNode> postOrderParse() {
@@ -171,37 +167,33 @@ public class TreeNode {
         return leftLeaveNodes(node, false).collect(Collectors.summingInt(TreeNode::getVal));
     }
 
-    private static class LeaveNode {
-        int val;
-        int level;
+    private static class Rec {
 
-        public LeaveNode(int val, int level) {
-            this.val = val;
-            this.level = level;
+        private int level = 0;
+        private int maxLevel = -1;
+        private int leftMost;
+
+        Integer bottomLeftValue(TreeNode node) {
+
+            if (level > maxLevel && node.left == null && node.right == null) {
+                maxLevel = level;
+                leftMost = node.val;
+            } else {
+                level++;
+                if (node.left != null) bottomLeftValue(node.left);
+                if (node.right != null) bottomLeftValue(node.right);
+                level--;
+            }
+
+            return leftMost;
         }
 
-        public static Comparator<LeaveNode> compare() {
-            return new Comparator<LeaveNode>() {
-                @Override
-                public int compare(LeaveNode o1, LeaveNode o2) {
-                    return o1.level == o2.level ? -1 :  o2.level - o1.level;
-                }
-            };
-        }
     }
 
-    private static Stream<LeaveNode> bottomLeftValue(TreeNode node, int level) {
-        if (node == null) return Stream.empty();
-
-        if (node.left == null && node.right == null)
-            return Stream.of(new LeaveNode(node.val, level));
-
-        Stream<LeaveNode> left = bottomLeftValue(node.left, level + 1);
-        Stream<LeaveNode> right = bottomLeftValue(node.right, level + 1);
-        return Stream.concat(left, right);
-    }
-
-    public static int bottomLeftValue(TreeNode node) {
-        return bottomLeftValue(node, 0).min(LeaveNode.compare()).get().val;
+    public static int bottomLeftValue(TreeNode root) {
+        return new Rec().bottomLeftValue(root);
     }
 }
+
+
+
