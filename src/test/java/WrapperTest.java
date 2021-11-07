@@ -47,8 +47,10 @@ public class WrapperTest {
 
     @Test
     public void testStringToNodeProblematic() {
-        TreeNode root = Wrapper.stringToTreeNode(" [0,null,-1]").get();
-        // Add some asserts.
+        TreeNode root = Wrapper.stringToTreeNode("[0,null,-1]").get();
+        assertEquals(0, root.val);
+        assertEquals(null, root.left);
+        assertEquals(-1, root.right.val);
     }
 
 
