@@ -1,4 +1,5 @@
 import com.google.common.base.Functions;
+import com.google.common.base.Supplier;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Streams;
 
@@ -23,7 +24,7 @@ public class TreeNode {
     }
 
     public List<Optional<Integer>> floorParse() {
-        List<Optional<Integer>> result = new ArrayList<Optional<Integer>>();
+        List<Optional<Integer>> result = new ArrayList<>();
         Queue<Optional<TreeNode>> remaining = new LinkedList<>(List.of(Optional.of(this)));
         int countNull = 0;
 
@@ -91,7 +92,8 @@ public class TreeNode {
 
     @Override
     public boolean equals(Object node) {
-        if (node == null || this.val != ((TreeNode) node).val) return false;
+        if (node == null || getClass() != node.getClass()) return false;
+        if (this.val != ((TreeNode) node).val) return false;
         return Iterators.elementsEqual(this.getAllChildren().iterator(), ((TreeNode) node).getAllChildren().iterator());
     }
 
@@ -148,13 +150,11 @@ public class TreeNode {
     public static Stream<TreeNode> leaveNodes(TreeNode node) {
         if (node == null) return Stream.empty();
         if (node.left == null && node.right == null) return Stream.of(node);
-
-        Stream<TreeNode> concat = Stream.concat(leaveNodes(node.left), leaveNodes(node.right));
-        return concat;
+        return Stream.concat(leaveNodes(node.left), leaveNodes(node.right));
     }
 
     public static int sumLeaveNodes(TreeNode node) {
-        return leaveNodes(node).collect(Collectors.summingInt(TreeNode::getVal));
+        return leaveNodes(node).mapToInt(TreeNode::getVal).sum();
     }
 
     public static Stream<TreeNode> leftLeaveNodes(TreeNode node, boolean fromLeft) {
@@ -164,34 +164,42 @@ public class TreeNode {
     }
 
     public static int sumLeftLeaveNodes(TreeNode node) {
-        return leftLeaveNodes(node, false).collect(Collectors.summingInt(TreeNode::getVal));
+        return leftLeaveNodes(node, false).mapToInt(TreeNode::getVal).sum();
     }
 
-    private static class Rec {
+    private static class LeftMost implements Supplier<Integer> {
 
         private int level = 0;
         private int maxLevel = -1;
         private int leftMost;
 
-        Integer bottomLeftValue(TreeNode node) {
-
-            if (level > maxLevel && node.left == null && node.right == null) {
-                maxLevel = level;
-                leftMost = node.val;
-            } else {
-                level++;
-                if (node.left != null) bottomLeftValue(node.left);
-                if (node.right != null) bottomLeftValue(node.right);
-                level--;
-            }
-
-            return leftMost;
+        public LeftMost(TreeNode node) {
+            rec(node);
         }
 
+        private void rec(TreeNode node) {
+            if (node.left == null && node.right == null) {
+                if (level > maxLevel) {
+                    maxLevel = level;
+                    leftMost = node.val;
+                }
+                return;
+            }
+
+            level++;
+            if (node.left != null) rec(node.left);
+            if (node.right != null) rec(node.right);
+            level--;
+        }
+
+        @Override
+        public Integer get() {
+            return leftMost;
+        }
     }
 
     public static int bottomLeftValue(TreeNode root) {
-        return new Rec().bottomLeftValue(root);
+        return new LeftMost(root).get();
     }
 }
 
