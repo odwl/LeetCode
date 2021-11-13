@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ListNode {
@@ -30,16 +31,34 @@ public class ListNode {
 
     @Override
     public String toString() {
-        List<Integer> list = new ArrayList<>(this.val);
+        List<String> list = new ArrayList<>(this.val);
         ListNode node = this;
         while (node != null) {
-            list.add(node.val);
+            list.add(String.valueOf(node.val));
             node = node.next;
         }
-
         return list.stream()
-                .map(i -> i.toString())
-                .collect(
-                Collectors.joining(",", "[", "]"));
+                .collect(Collectors.joining(",", "[", "]"));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ListNode listNode = (ListNode) o;
+        return val == listNode.val && Objects.equals(next, listNode.next);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(val, next);
+    }
+
+    public static ListNode removeElements(ListNode head, int val) {
+        if (head == null) return head;
+        ListNode remaining = removeElements(head.next, val);
+        if (head.val == val) return remaining;
+        head.next = remaining;
+        return head;
     }
 }
