@@ -201,6 +201,32 @@ public class TreeNode {
     public static int bottomLeftValue(TreeNode root) {
         return new LeftMost(root).get();
     }
+
+    private static class IsBalanced {
+
+        private static int level = 0;
+        private static int maxDepth;
+
+        /**
+         *
+         * @param node
+         * @return -1 if the tree is not balanced.
+         *          0 if node is null
+         *          longer path length - shortest path length.
+         */
+        public static int retrieveDepth(TreeNode node) {
+            if (node == null) return 0;
+
+            int left = retrieveDepth(node.left);
+            int right = retrieveDepth(node.right);
+            if (left == -1 || right == -1 || Math.abs(left - right) > 1) return -1;
+            return 1 + Math.max(left, right);
+        }
+    }
+
+    public static boolean isBalanced(TreeNode root) {
+        return IsBalanced.retrieveDepth(root) != -1;
+    }
 }
 
 

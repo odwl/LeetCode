@@ -201,11 +201,30 @@ public class TreeNodeTest {
 
         root = Wrapper.stringToTreeNode("[1,2,3,4,null,5,6,null,null,7]").get();
         assertEquals(7, TreeNode.bottomLeftValue(root));
-
-
-
-
-
     }
+
+    @Test
+    public void testIsBalanced(){
+        TreeNode root;
+
+        root = Wrapper.stringToTreeNode("[1,3,3,9,null,9,null,2]").get();
+        assertFalse(TreeNode.isBalanced(root));
+
+        root = Wrapper.stringToTreeNode("[3,9,20]").get();
+        assertTrue(TreeNode.isBalanced(root));
+
+        root = Wrapper.stringToTreeNode("[3,9,null,2]").get();
+        assertFalse(TreeNode.isBalanced(root));
+
+        root = Wrapper.stringToTreeNode("[3,9,2,null,null,3,4]").get();
+        assertTrue(TreeNode.isBalanced(root));
+
+        root = Wrapper.stringToTreeNode("[3,9,20,null,null,15,7]").get();
+        assertTrue(TreeNode.isBalanced(root));
+
+        root = Wrapper.stringToTreeNode("[1,2,2,3,3,null,null,4,4]").get();
+        assertFalse(TreeNode.isBalanced(root));
+    }
+
 
 }
