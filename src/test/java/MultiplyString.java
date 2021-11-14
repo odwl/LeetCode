@@ -1,11 +1,5 @@
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import static org.junit.Assert.assertEquals;
 
 public class MultiplyString {
@@ -38,101 +32,31 @@ public class MultiplyString {
         return total;
     }
 
-    //    public String addString(String num1, String num2) {
-//        String total = "";
-//        int remain = 0;
-//        for (int i = 0; i < Math.max(num1.length(), num2.length()) ; i++) {
-//            int d1_rev = num1.length() - i - 1;
-//            int d1 = d1_rev >= 0 ? num1.codePointAt(d1_rev) : 48;
-//
-//            int d2_rev = num2.length() - i - 1;
-//            int d2 = d2_rev >= 0 ? num2.codePointAt(d2_rev) : 48;
-//
-//            int val = d1 + d2 + remain - 2*48;
-//
-//            total = String.valueOf(val % 10) + total;
-//            remain = (int)(val / 10);
-//        }
-//        return (remain == 0) ? total : String.valueOf(remain) + total ;
-//    }
-    public String addString(Stream<String> nums) {
-        List<String> list = nums.filter(s -> !s.isEmpty()).collect(Collectors.toList());
-        if (list.isEmpty()) return "";
-
-        int sum = list.stream()
-                .map(s -> s.codePointAt(s.length() - 1) - 48)
-                .mapToInt(v -> v >= 0 ? v : 0)
-                .sum();
-        String total = String.valueOf(sum);
-
-        Stream<String> rec = list.stream()
-                .map(s -> s.substring(0, s.length() - 1));
-        if (total.length() > 1) rec = Stream.concat(rec, Stream.of(total.substring(0, total.length()-1)));
-
-        return addString(rec) + total.substring(total.length() - 1);
-
-    }
-
     public String addString(String num1, String num2) {
         StringBuilder builder = new StringBuilder();
 
         int remain = 0;
+//        for (int i = num1.length() - 1, j = num2.length() - 1, carry = 0;
+//             i >= 0 || j >= 0 || carry != 0;
+//             i--, j--) {}
+
         int max = Math.max(num1.length(), num2.length());
-
-        Function<String, List<Integer>> f = num -> {
-            List<Integer> list = new ArrayList<>();
-            for (int i = 0; i < max; i++) {
-                int d1_rev = num.length() - i - 1;
-                int d1 = d1_rev >= 0 ? num.codePointAt(d1_rev) - '0' : 0;
-                list.add(d1);
-            }
-            return list;
-        };
-
-        List<Integer> list1 = f.apply(num1);
-        List<Integer> list2 = f.apply(num2);
-
         for (int i = 0; i < max; i++) {
-            int val = list1.get(i) + list2.get(i) + remain;
+            int d1_rev = num1.length() - i - 1;
+            int d1 = d1_rev >= 0 ? num1.codePointAt(d1_rev) - '0' : 0;
+
+            int d2_rev = num2.length() - i - 1;
+            int d2 = d2_rev >= 0 ? num2.codePointAt(d2_rev) - '0': 0;
+
+            int val = d1 + d2 + remain;
+
             builder.append(val % 10);
-            remain = val / 10;
+
+            remain = (int)(val / 10);
         }
-        if (remain != 0) builder.append(remain);
+        if (remain !=0) builder.append(remain);
         return builder.reverse().toString();
     }
-
-//    public String addString(String num1, String num2) {
-//        return addString(Stream.of(num1, num2));
-//        if (num1.isEmpty()) return num2;
-//        if (num2.isEmpty()) return num1;
-//
-//        int sum = Stream.of(num1, num2)
-//                .map(s -> s.codePointAt(s.length() - 1) - 48)
-//                .mapToInt(v -> v >= 0 ? v : 0)
-//                .sum();
-//        String total = String.valueOf(sum);
-//
-//        Stream<String> rec = Stream.of(num1, num2)
-//                .map(s -> num1.substring(0, s.length() - 1));
-//        if (total.length() == 1) rec = Stream.concat(rec, Stream.of(total.substring(0, 1)));
-//
-//        return addString(rec) + total.substring(total.length() - 1, total.length());
-
-
-//        int d1_rev = num1.length() - 1;
-//        int d1 = d1_rev >= 0 ? num1.codePointAt(d1_rev) - 48 : 0;
-//
-//        int d2_rev = num2.length() - 1;
-//        int d2 = d2_rev >= 0 ? num2.codePointAt(d2_rev) - 48 : 0;
-//        String total = String.valueOf(d1 + d2);
-//
-//        String rec = addString(
-//                num1.substring(0, num1.length() - 1),
-//                num2.substring(0, num2.length() - 1));
-//
-//        return (total.length() == 1 ? rec : addString(rec, total.substring(0,1)))
-//                + total.substring(total.length() -1, total.length());
-//    }
 
     @Test
     public void testMultiplyString() {
