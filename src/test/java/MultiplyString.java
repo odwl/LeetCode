@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import java.util.stream.Stream;
+
 import static org.junit.Assert.assertEquals;
 
 public class MultiplyString {
@@ -9,52 +11,42 @@ public class MultiplyString {
         if (num1.equals("1")) return num2;
         if (num2.equals("1")) return num1;
 
-        String total = "";
+        Stream.Builder<String> builder = Stream.builder();
+
         String tens = "";
         for (int i = num1.length() - 1; i >= 0; i--) {
-            int d1 = num1.codePointAt(i) - 48;
+            int d1 = num1.charAt(i) - '0';
 
-            String res = "";
+            StringBuilder termsBuilder = new StringBuilder(tens);
             int remain = 0;
             for (int j = num2.length() - 1; j >= 0; j--) {
-                int d2 = num2.codePointAt(j) - 48;
+                int d2 = num2.charAt(j) - '0';
                 int val = d1 * d2 + remain;
-                res = val % 10 + res;
+                termsBuilder.append(val%10);
                 remain = val / 10;
             }
-            res += tens;
+
             tens += "0";
-            if (remain > 0) res = remain + res;
-
-            total = addString(total, res);
+            if (remain > 0) termsBuilder.append(remain);
+            builder.add(termsBuilder.reverse().toString());
         }
-
-        return total;
+        return builder.build().reduce(this::addStrings).get();
     }
 
-    public String addString(String num1, String num2) {
+    public String addStrings(String num1, String num2) {
         StringBuilder builder = new StringBuilder();
 
-        int remain = 0;
-//        for (int i = num1.length() - 1, j = num2.length() - 1, carry = 0;
-//             i >= 0 || j >= 0 || carry != 0;
-//             i--, j--) {}
-
-        int max = Math.max(num1.length(), num2.length());
-        for (int i = 0; i < max; i++) {
-            int d1_rev = num1.length() - i - 1;
-            int d1 = d1_rev >= 0 ? num1.codePointAt(d1_rev) - '0' : 0;
-
-            int d2_rev = num2.length() - i - 1;
-            int d2 = d2_rev >= 0 ? num2.codePointAt(d2_rev) - '0': 0;
-
-            int val = d1 + d2 + remain;
-
+        int carry = 0;
+        for (int i1 = num1.length() - 1, i2 = num2.length() -1;
+             i1 >= 0 || i2 >= 0;
+             i1--, i2--) {
+            int d1 = i1 >= 0 ? num1.charAt(i1) - '0' : 0;
+            int d2 = i2 >= 0 ? num2.charAt(i2) - '0': 0;
+            int val = d1 + d2 + carry;
             builder.append(val % 10);
-
-            remain = (int)(val / 10);
+            carry = val / 10;
         }
-        if (remain !=0) builder.append(remain);
+        if (carry != 0) builder.append(carry);
         return builder.reverse().toString();
     }
 
@@ -82,18 +74,18 @@ public class MultiplyString {
 
     @Test
     public void testAddString() {
-        assertEquals("201", addString("1", "200"));
+        assertEquals("201", addStrings("1", "200"));
 
-        assertEquals("5", addString("0", "5"));
-        assertEquals("5", addString("5", "0"));
-        assertEquals("2", addString("1", "1"));
-        assertEquals("201", addString("200", "1"));
-        assertEquals("557", addString("2", "555"));
-        assertEquals("557", addString("555", "2"));
-        assertEquals("5", addString("2", "3"));
-        assertEquals("5", addString("3", "2"));
-        assertEquals("1110", addString("555", "555"));
-        assertEquals("1110", addString("555", "555"));
+        assertEquals("5", addStrings("0", "5"));
+        assertEquals("5", addStrings("5", "0"));
+        assertEquals("2", addStrings("1", "1"));
+        assertEquals("201", addStrings("200", "1"));
+        assertEquals("557", addStrings("2", "555"));
+        assertEquals("557", addStrings("555", "2"));
+        assertEquals("5", addStrings("2", "3"));
+        assertEquals("5", addStrings("3", "2"));
+        assertEquals("1110", addStrings("555", "555"));
+        assertEquals("1110", addStrings("555", "555"));
     }
 }
 
