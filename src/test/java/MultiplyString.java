@@ -13,11 +13,11 @@ public class MultiplyString {
 
         Stream.Builder<String> builder = Stream.builder();
 
-        String tens = "";
-        for (int i = num1.length() - 1; i >= 0; i--) {
+        int last1 = num1.length() - 1;
+        for (int i = last1; i >= 0; i--) {
             int d1 = num1.charAt(i) - '0';
 
-            StringBuilder termsBuilder = new StringBuilder(tens);
+            StringBuilder termsBuilder = new StringBuilder("0".repeat(last1 - i));
             int remain = 0;
             for (int j = num2.length() - 1; j >= 0; j--) {
                 int d2 = num2.charAt(j) - '0';
@@ -26,7 +26,6 @@ public class MultiplyString {
                 remain = val / 10;
             }
 
-            tens += "0";
             if (remain > 0) termsBuilder.append(remain);
             builder.add(termsBuilder.reverse().toString());
         }
