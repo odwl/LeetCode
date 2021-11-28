@@ -28,7 +28,7 @@ public class CountNoneTest {
         size = 1000;
         Random random = new Random();
         int[] data = random.ints(size).toArray();
-        root = Wrapper.arrayToTreeNode(IntStream.of(data).mapToObj(Optional::of).toList()).get();
+        root = Wrapper.arrayToTreeNode(IntStream.of(data).mapToObj(Optional::of).toList());
     }
 
     @Test()

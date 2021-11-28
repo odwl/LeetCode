@@ -12,11 +12,7 @@ import java.util.stream.Stream;
 
 class Wrapper {
 
-    public static Optional<TreeNode> arrayToTreeNode(List<Optional<Integer>> input) {
-        if (input.size() == 0) {
-            return Optional.empty();
-        }
-
+    public static TreeNode arrayToTreeNode(List<Optional<Integer>> input) {
         LinkedList<Optional<TreeNode>> inputQueue = input.stream()
                 .map(ot -> ot.map(TreeNode::new))
                 .collect(Collectors.toCollection(LinkedList::new));
@@ -26,15 +22,13 @@ class Wrapper {
 
         while (!inputQueue.isEmpty()) {
             TreeNode parent = nodeQueue.remove();
+            Stream<Optional<TreeNode>> nodes = Stream.generate(inputQueue::poll).limit(2).filter(x -> x != null);
             Stream<Consumer<TreeNode>> setters = Stream.of(parent::setLeft, parent::setRight);
-
-            Streams.forEachPair(
-                    setters, inputQueue.stream(),
+            Streams.forEachPair(setters, nodes,
                     (consumer, child) -> child.ifPresent(consumer.andThen(nodeQueue::add)));
-
-            Stream.generate(inputQueue::poll).limit(2).count();
         }
-        return Optional.of(root);
+
+        return root;
     }
 
     public static Optional<TreeNode> stringToTreeNode(String input) {
@@ -44,7 +38,7 @@ class Wrapper {
                 .splitAsStream(input.substring(1, input.length() - 1))
                 .map(s -> Optional.ofNullable(Ints.tryParse(s)))
                 .collect(Collectors.toList());
-        return arrayToTreeNode(nodeList);
+        return Optional.ofNullable(arrayToTreeNode(nodeList));
     }
 
     public static void prettyPrintTree(TreeNode node, String prefix, boolean isLeft) {

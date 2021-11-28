@@ -56,7 +56,7 @@ public class WrapperTest {
 
     @Test
     public void testToTreeFourInt() {
-        TreeNode root = Wrapper.arrayToTreeNode(Stream.of(4, 2, 1, 3).map(Optional::of).toList()).get();
+        TreeNode root = Wrapper.arrayToTreeNode(Stream.of(4, 2, 1, 3).map(Optional::of).toList());
         assertEquals(4, root.val);
         assertEquals(2, root.left.val);
         assertEquals(1, root.right.val);
