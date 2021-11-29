@@ -1,10 +1,7 @@
 import com.google.common.collect.Streams;
 import com.google.common.primitives.Ints;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -22,10 +19,12 @@ class Wrapper {
 
         while (!inputQueue.isEmpty()) {
             TreeNode parent = nodeQueue.remove();
-            Stream<Optional<TreeNode>> nodes = Stream.generate(inputQueue::poll).limit(2).filter(x -> x != null);
+            Stream<Optional<TreeNode>> nodes = Stream.generate(inputQueue::poll)
+                    .limit(2)
+                    .filter(Objects::nonNull);
             Stream<Consumer<TreeNode>> setters = Stream.of(parent::setLeft, parent::setRight);
-            Streams.forEachPair(setters, nodes,
-                    (consumer, child) -> child.ifPresent(consumer.andThen(nodeQueue::add)));
+            Streams.forEachPair(setters.map(c -> c.andThen(nodeQueue::add)), nodes,
+                    (consumer, child) -> child.ifPresent(consumer));
         }
 
         return root;
