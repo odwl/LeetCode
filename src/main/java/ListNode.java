@@ -22,7 +22,7 @@ public class ListNode {
     public static ListNode fromArray(int[] input) {
         ListNode node = new ListNode();
         ListNode root = node;
-        for (int el: input) {
+        for (int el : input) {
             node.next = new ListNode(el);
             node = node.next;
         }
@@ -59,6 +59,26 @@ public class ListNode {
         ListNode remaining = removeElements(head.next, val);
         if (head.val == val) return remaining;
         head.next = remaining;
+        return head;
+    }
+
+    public static ListNode oddEven(ListNode head) {
+        ListNode odd = new ListNode(), even = new ListNode();
+        ListNode even_head = even, it = head;
+
+        while (it != null) {
+            odd.next = odd = it;
+            it = it.next;
+
+            if (it != null) {
+                even.next = even = it;
+                it = it.next;
+            }
+        }
+
+        even.next = null;
+        odd.next = even_head.next;
+
         return head;
     }
 }
