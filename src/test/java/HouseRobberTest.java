@@ -1,26 +1,25 @@
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
 public class HouseRobberTest {
 
-    public static Map<List<Integer>, Integer> cache = new ConcurrentHashMap<>();
+    public static Map<String, Integer> cache = new HashMap<>();
 
 
     public static int houseRobber(int[] houses) {
-        System.out.println("len: " + houses.length);
         if (houses.length == 1) return houses[0];
         if (houses.length == 2) return Math.max(houses[0], houses[1]);
 
-        int first_sol = houses[0] + houseRobber(Arrays.copyOfRange(houses, 2, houses.length));
-        int second_sol = houseRobber(Arrays.copyOfRange(houses, 1, houses.length));
+        int[] sub1 = Arrays.copyOfRange(houses, 1, houses.length);
+        int second_sol = cache.computeIfAbsent(sub1.toString(), s -> houseRobber(sub1));
+
+        int[] sub2 = Arrays.copyOfRange(houses, 2, houses.length);
+        int first_sol = houses[0] + cache.computeIfAbsent(sub2.toString(), s -> houseRobber(sub2));
 
         return Math.max(first_sol, second_sol);
     }
