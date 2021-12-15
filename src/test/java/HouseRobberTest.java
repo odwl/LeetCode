@@ -2,41 +2,42 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
 public class HouseRobberTest {
 
-    public static Map<String, Integer> cache = new HashMap<>();
+    private static Map<List<Integer>, Integer> cache = new HashMap<>();
 
 
-    public static int populate(int[] houses) {
-        if (houses.length == 1)  {
-            cache.put(Arrays.toString(houses), houses[0]);
-            return houses[0];
+    private static void populate(List<Integer> houses) {
+
+        if (houses.size() == 1)  {
+            cache.put(houses, houses.get(0));
+            return;
 
         }
-        if (houses.length == 2)  {
-            cache.put(Arrays.toString(houses), Math.max(houses[0], houses[1]));
-            return Math.max(houses[0], houses[1]);
+        if (houses.size() == 2)  {
+            cache.put(houses, Math.max(houses.get(0), houses.get(1)));
+            return;
         }
 
-        int[] sub1 = Arrays.copyOfRange(houses, 1, houses.length);
-        int second_sol = cache.computeIfAbsent(Arrays.toString(sub1), s -> houseRobber(sub1));
+        int second_sol = cache.get(houses.subList(1, houses.size()));
+        int first_sol = houses.get(0) + cache.get(houses.subList(2, houses.size()));
 
-        int[] sub2 = Arrays.copyOfRange(houses, 2, houses.length);
-        int first_sol = houses[0] + cache.computeIfAbsent(Arrays.toString(sub2), s -> houseRobber(sub2));
-
-        return Math.max(first_sol, second_sol);
+        int max = Math.max(first_sol, second_sol);
+        cache.put(houses, max);
     }
 
     public static int houseRobber(int[] houses) {
-        int res = -1;
+        List<Integer> list = Arrays.stream(houses).boxed().collect(Collectors.toList());
         for (int i = houses.length - 1; i >= 0; i--) {
-            res = populate(Arrays.copyOfRange(houses, i, houses.length));
+            populate(list.subList(i, list.size()));
         }
-        return res;
+        return cache.get(list);
     }
 
     @Test
