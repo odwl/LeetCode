@@ -1,43 +1,36 @@
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
 public class HouseRobberTest {
 
-    private static Map<List<Integer>, Integer> cache = new HashMap<>();
-
+    private static int one, two;
 
     private static void populate(List<Integer> houses) {
 
-        if (houses.size() == 1)  {
-            cache.put(houses, houses.get(0));
-            return;
-
-        }
         if (houses.size() == 2)  {
-            cache.put(houses, Math.max(houses.get(0), houses.get(1)));
+            two = one;
+            one = Math.max(houses.get(0), houses.get(1));
             return;
         }
 
-        int second_sol = cache.get(houses.subList(1, houses.size()));
-        int first_sol = houses.get(0) + cache.get(houses.subList(2, houses.size()));
-
-        int max = Math.max(first_sol, second_sol);
-        cache.put(houses, max);
+        int second_sol = one;
+        int first_sol = houses.get(0) + two;
+        two = one;
+        one = Math.max(first_sol, second_sol);
     }
 
     public static int houseRobber(int[] houses) {
+        one = houses[houses.length-1];
+
         List<Integer> list = Arrays.stream(houses).boxed().collect(Collectors.toList());
-        for (int i = houses.length - 1; i >= 0; i--) {
+        for (int i = houses.length - 2; i >= 0; i--) {
             populate(list.subList(i, list.size()));
         }
-        return cache.get(list);
+        return one;
     }
 
     @Test
