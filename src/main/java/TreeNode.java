@@ -204,7 +204,7 @@ public class TreeNode {
 
     private static class IsBalanced {
 
-        private static int level = 0;
+        private static final int level = 0;
         private static int maxDepth;
 
         /**

@@ -10,7 +10,7 @@ import java.util.Stack;
 
 public class MinStack {
 
-    private Stack<Map.Entry<Integer, Integer>> stack;
+    private final Stack<Map.Entry<Integer, Integer>> stack;
 
     public MinStack() {
         stack = new Stack();

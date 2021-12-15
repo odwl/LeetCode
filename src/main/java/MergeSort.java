@@ -57,7 +57,7 @@ public class MergeSort {
      * hint: since the mergeSort function modify only from lo to hi, you can call it
      * successively on different part of the array
      */
-    public static void mergeSort(int a[], int [] aux, int lo, int hi) {
+    public static void mergeSort(int[] a, int [] aux, int lo, int hi) {
         // Condition simple
         if (lo == hi) {
             aux[lo] = a[lo];

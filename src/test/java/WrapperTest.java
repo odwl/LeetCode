@@ -87,7 +87,7 @@ public class WrapperTest {
         assertEquals(3, countAlphabet("AAA")[0]);
         assertEquals(26, countAlphabet("").length);
 
-        String s = new String();
+        String s = "";
         for (int i = 0; i < 26; i++) {
             s += (char) ('A' + i);
             s += (char) ('a' + i);
@@ -115,7 +115,7 @@ public class WrapperTest {
                 .collect(Collectors.toList());
         assertEquals(List.of("1", "2", "4"), sol);
 
-        int b = (int) 'a';
+        int b = 'a';
         int a = 300;
         byte c = (byte) a;
         assertEquals(300 % 128, c);
