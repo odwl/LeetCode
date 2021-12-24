@@ -11,7 +11,7 @@ public class TreeNode {
     int val;
     TreeNode left;
     TreeNode right;
-    private Object node;
+//    private Object node;
 
     TreeNode(int val) {
         this.val = val;
