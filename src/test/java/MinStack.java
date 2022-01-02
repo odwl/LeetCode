@@ -13,7 +13,7 @@ public class MinStack {
     private final Stack<Map.Entry<Integer, Integer>> stack;
 
     public MinStack() {
-        stack = new Stack();
+        stack = new Stack<Map.Entry<Integer, Integer>>();
     }
 
     public void push(int val) {
