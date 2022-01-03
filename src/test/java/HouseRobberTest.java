@@ -2,9 +2,26 @@ import org.junit.Test;
 
 import java.util.function.Supplier;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertEquals;
 
 public class HouseRobberTest {
+
+
+    public static int houseRobberCirc(int[] houses) {
+        if (houses.length == 1) return houses[0];
+
+
+        int[] withoutLast = Arrays.copyOf(houses, houses.length-1);
+        int resWithoutLast = houseRobber(withoutLast);
+
+
+        int[] withoutFirst = Arrays.copyOfRange(houses, 1, houses.length);
+        int resWithoutFirst = houseRobber(withoutFirst);
+
+        return Math.max(resWithoutFirst, resWithoutLast);
+    }
 
     public static int houseRobber(int[] houses) {
         if (houses.length == 1) return houses[0];
@@ -76,18 +93,34 @@ public class HouseRobberTest {
         assertEquals(7, houseRobber(Wrapper.stringToTreeNode("[3,2,3,null,3,null,1]").get()));
     }
 
+
     @Test
     public void testHouseRobber() {
-
         assertEquals(4, houseRobber(new int[]{1, 2, 3, 1}));
-
         assertEquals(1, houseRobber(new int[]{1}));
         assertEquals(2, houseRobber(new int[]{1, 2}));
         assertEquals(2, houseRobber(new int[]{2, 1}));
         assertEquals(4, houseRobber(new int[]{1, 2, 3}));
         assertEquals(3, houseRobber(new int[]{1, 3, 2}));
         assertEquals(4, houseRobber(new int[]{3, 2, 1}));
-        System.out.println("-------");
         assertEquals(12, houseRobber(new int[]{2, 7, 9, 3, 1}));
+    }
+
+    @Test
+    public void testHouseRobberCirc() {
+        assertEquals(3, houseRobberCirc(new int[]{3, 2, 1}));
+
+        assertEquals(3, houseRobberCirc(new int[]{1, 2, 3}));
+
+        assertEquals(3, houseRobberCirc(new int[]{1, 3, 2}));
+        assertEquals(3, houseRobberCirc(new int[]{1, 3, 2}));
+
+
+        assertEquals(1, houseRobberCirc(new int[]{1}));
+        assertEquals(2, houseRobberCirc(new int[]{1, 2}));
+        assertEquals(2, houseRobberCirc(new int[]{2, 1}));
+
+        assertEquals(4, houseRobberCirc(new int[]{1, 2, 3, 1}));
+        assertEquals(11, houseRobberCirc(new int[]{2, 7, 9, 3, 1}));
     }
 }
