@@ -23,7 +23,7 @@ public class TownJudgeTest {
         return count == n - 1 ? cand : -1;
     }
 
-    public int findJudge(int n, int[][] trust) {
+    public int findJudge3(int n, int[][] trust) {
         if (trust.length < n - 1) return -1;
         if (n == 1) return trust.length == 0 ? 1 : -1;
 
@@ -42,8 +42,26 @@ public class TownJudgeTest {
         return likers.contains(cand) ? -1 : cand;
     }
 
+    public int findJudge(int N, int[][] trust) {
+        if (trust.length < N - 1) return -1;
+
+        int[] indegrees = new int[N + 1];
+        int[] outdegrees = new int[N + 1];
+
+        for (int[] relation : trust) {
+            outdegrees[relation[0]]++;
+            indegrees[relation[1]]++;
+        }
+
+        return IntStream.range(1, N+1)
+                .filter(i -> indegrees[i] == N - 1)
+                .filter(i -> outdegrees[i] == 0)
+                .findFirst().orElse(-1);
+    }
+
     @Test
     public void testJudge() {
+
         assertEquals(2, findJudge(3, new int[][]{{1,2}, {3,2}}));
 
         assertEquals(-1, findJudge(3, new int[][]{{1,2}, {3,1}}));
@@ -56,7 +74,13 @@ public class TownJudgeTest {
 
         assertEquals(-1, findJudge(2, new int[][]{{1,2}, {2,1}}));
         assertEquals(-1, findJudge(5, new int[][]{{1,2}, {3,2}, {2,1}}));
-        assertEquals(-1, findJudge(2, new int[][]{{1,2}, {3,2}, {2,1}}));
+
+
+
+
+
+
+
         assertEquals(2, findJudge(2, new int[][]{{1,2}}));
         assertEquals(1, findJudge(2, new int[][]{{2,1}}));
         assertEquals(-1, findJudge(3, new int[][]{{1,2}, {3,2}, {2,1}}));
