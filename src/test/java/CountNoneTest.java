@@ -1,6 +1,5 @@
 import org.junit.BeforeClass;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
