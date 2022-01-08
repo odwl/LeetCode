@@ -1,20 +1,13 @@
 import org.junit.Test;
-import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class HeapTest {
-
 
     public int findKthLargest2(int[] nums, int k) {
 
@@ -47,8 +40,57 @@ public class HeapTest {
         }
 
         int[] sol = new int[k];
-        IntStream.rangeClosed(0, k-1).forEach(i -> sol[k-1-i] = heap.poll());
+        IntStream.rangeClosed(0, k - 1).forEach(i -> sol[k - 1 - i] = heap.poll());
         return sol;
+    }
+
+    public class KthLargest {
+
+        Queue<Integer> q;
+        int k;
+
+        public KthLargest(int k, int[] a) {
+            this.k = k;
+            q = new PriorityQueue<>(k);
+            Arrays.stream(a).forEach(this::add);
+        }
+
+        public int add(int n) {
+            if (q.size() < k)
+                q.offer(n);
+            else if (q.peek() < n) {
+                q.poll();
+                q.offer(n);
+            }
+            return q.peek();
+        }
+    }
+
+    public int lastStoneWeight(int[] stones) {
+        Queue<Integer> queue = new PriorityQueue<>(stones.length, Comparator.reverseOrder());
+        Arrays.stream(stones).forEach(queue::offer);
+        while (queue.size() > 1) {
+            int newStone = queue.poll() - queue.poll();
+            if (newStone != 0) queue.offer(newStone);
+        }
+        return queue.size() > 0 ? queue.poll() : 0;
+    }
+
+    @Test
+    public void testStone() {
+        assertEquals(1, lastStoneWeight(new int[] {2,7,4,1,8,1}));
+        assertEquals(0, lastStoneWeight(new int[] {2,2}));
+        assertEquals(5, lastStoneWeight(new int[] {31,26,33,21,40}));
+    }
+
+    @Test
+    public void testKClass() {
+        KthLargest obj = new KthLargest(3, new int[]{4, 5, 8, 2});
+        assertEquals(4, obj.add(3));
+        assertEquals(5, obj.add(5));
+        assertEquals(5, obj.add(10));
+        assertEquals(8, obj.add(9));
+        assertEquals(8, obj.add(4));
     }
 
     @Test
