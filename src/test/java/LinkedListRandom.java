@@ -3,6 +3,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class LinkedListRandom {
 
@@ -25,9 +27,26 @@ public class LinkedListRandom {
         }
     }
 
+    public boolean whatDoesIsDo(int x) {
+        System.out.println("x: " + (x & (x-1)));
+        return (x & (x - 1)) == 0;
+    }
 
     @Test
     public void testRandom() {
+
+        assertFalse(whatDoesIsDo(-2));
+        assertFalse(whatDoesIsDo(-1));
+        assertTrue(whatDoesIsDo(0));
+        assertTrue(whatDoesIsDo(1));
+        assertTrue(whatDoesIsDo(2));
+        assertFalse(whatDoesIsDo(3));
+        assertTrue(whatDoesIsDo(4));
+        assertTrue(whatDoesIsDo(8));
+        assertFalse(whatDoesIsDo(12));
+
+        assertTrue(whatDoesIsDo(16));
+
         ListNode node = ListNode.fromArray(new int[]{1,2,3});
         Solution obj = new Solution(node);
         int param_1 = obj.getRandom();
