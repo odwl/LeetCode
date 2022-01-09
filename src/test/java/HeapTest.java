@@ -10,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HeapTest {
 
-    int size = 20000;
+    int size = 2;
     int[][] mat = new int[size][size];
     int[] sol = new int[size];
 
     HeapTest() {
         for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j ++) {
+            for (int j = 0; j < size; j++) {
                 mat[i][j] = 0;
             }
         }
@@ -118,7 +118,7 @@ public class HeapTest {
         // Create a Priority Queue that measures firstly on strength and then indexes.
 //        Comparator<int[]> descFirtIn = Comparator.<int[]>comparingInt(pair -> pair[0]).thenComparingInt(pair -> pair[1]).reversed();
 //        PriorityQueue<int[]> pq = new  PriorityQueue<>(descFirtIn);
-        PriorityQueue<int[]> pq = new  PriorityQueue<>((a, b) -> {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
             if (a[0] == b[0]) return b[1] - a[1];
             else return b[0] - a[0];
         });
@@ -145,7 +145,7 @@ public class HeapTest {
 
     public int[] kWeakestRowsBinary(int[][] mat, int k) {
         Integer[] rows = Arrays.stream(mat).map(this::binarySearch).toArray(Integer[]::new);
-        Comparator<Integer> descFirtIn = Comparator.<Integer>comparingInt(j -> rows[j]).thenComparingInt(i->i).reversed();
+        Comparator<Integer> descFirtIn = Comparator.<Integer>comparingInt(j -> rows[j]).thenComparingInt(i -> i).reversed();
 
         Queue<Integer> heap = new PriorityQueue<>(k, descFirtIn);
 
@@ -166,7 +166,7 @@ public class HeapTest {
         Queue<int[]> heap = new PriorityQueue<>(k, descFirtIn);
 
         for (int i = 0; i < mat.length; i++) {
-            heap.add(new int[] {binarySearch(mat[i]), i});
+            heap.add(new int[]{binarySearch(mat[i]), i});
             if (heap.size() > k) heap.poll();
         }
 
@@ -179,7 +179,7 @@ public class HeapTest {
     public int[] kWeakestRowsSum(int[][] mat, int k) {
         List<Integer> rows = Arrays.stream(mat).map(vec -> Arrays.stream(vec).sum()).collect(Collectors.toList());
 
-        Comparator<Integer> descFirtIn = Comparator.comparingInt(rows::get).thenComparingInt(i->i).reversed();
+        Comparator<Integer> descFirtIn = Comparator.comparingInt(rows::get).thenComparingInt(i -> i).reversed();
         Queue<Integer> heap = new PriorityQueue<>(k, descFirtIn);
 
         for (int i = 0; i < mat.length; i++) {
@@ -196,9 +196,9 @@ public class HeapTest {
         int[] zeros = new int[mat[0].length];
         Arrays.fill(zeros, 1);
 
-        List<Integer> rows = Arrays.stream(mat).map(vec -> Arrays.mismatch(zeros, vec)).map(i-> i == -1 ? mat[0].length : i).collect(Collectors.toList());
+        List<Integer> rows = Arrays.stream(mat).map(vec -> Arrays.mismatch(zeros, vec)).map(i -> i == -1 ? mat[0].length : i).collect(Collectors.toList());
 
-        Comparator<Integer> descFirtIn = Comparator.comparingInt(rows::get).thenComparingInt(i->i).reversed();
+        Comparator<Integer> descFirtIn = Comparator.comparingInt(rows::get).thenComparingInt(i -> i).reversed();
         Queue<Integer> heap = new PriorityQueue<>(k, descFirtIn);
 
         for (int i = 0; i < mat.length; i++) {
@@ -211,6 +211,41 @@ public class HeapTest {
         return sol;
     }
 
+    public int kthSmallest(int[][] matrix, int k) {
+        TreeSet<List<Integer>> visited = new TreeSet<>(Comparator.comparingInt(vec -> matrix[vec.get(0)][vec.get(1)]));
+
+        List<Integer> cand = List.of(0, 0);
+        visited.add(cand);
+        for (int count = 0; count < k; count++) {
+            cand = visited.pollFirst();
+
+            if (cand.get(0) < matrix.length - 1) {
+                List<Integer> cand1 = List.of(cand.get(0) + 1, cand.get(1));
+                if (!visited.contains(cand1)) visited.add(cand1);
+            }
+
+            if (cand.get(1) < matrix.length - 1) {
+                List<Integer> cand2 = List.of(cand.get(0), cand.get(1) + 1);
+                if (!visited.contains(cand2)) visited.add(cand2);
+            }
+        }
+        return matrix[cand.get(0)][cand.get(1)];
+    }
+
+    @Test
+    public void testSmallest() {
+        assertEquals(15, kthSmallest(new int[][]{{1,5,9}, {10,11,13}, {12,13,15}}, 8));
+
+        assertEquals(11, kthSmallest(new int[][]{{1, 3, 5}, {6, 7, 12}, {11, 14, 14}}, 6));
+
+        assertEquals(3, kthSmallest(new int[][]{{1, 2}, {3, 4}}, 3));
+        assertEquals(4, kthSmallest(new int[][]{{1, 2}, {3, 4}}, 4));
+        assertEquals(1, kthSmallest(new int[][]{{1}}, 1));
+        assertEquals(1, kthSmallest(new int[][]{{1, 2}, {3, 4}}, 1));
+        assertEquals(2, kthSmallest(new int[][]{{1, 2}, {3, 4}}, 2));
+    }
+
+
     @Test
     public void testWeekestRow() {
         assertArrayEquals(new int[]{0, 1}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 1}}, 2));
@@ -219,7 +254,7 @@ public class HeapTest {
         assertArrayEquals(new int[]{0}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 0}}, 1));
         assertArrayEquals(new int[]{0}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 1}}, 1));
         assertArrayEquals(new int[]{0, 1}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 0}}, 2));
-        assertArrayEquals(new int[]{0,1}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 0}}, 2));
+        assertArrayEquals(new int[]{0, 1}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 0}}, 2));
         assertArrayEquals(new int[]{2, 0, 3}, kWeakestRowsBinary2(new int[][]{
                 {1, 1, 0, 0, 0},
                 {1, 1, 1, 1, 0},
