@@ -1,4 +1,5 @@
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -8,6 +9,26 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class HeapTest {
+
+    int size = 20000;
+    int[][] mat = new int[size][size];
+    int[] sol = new int[size];
+
+    HeapTest() {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j ++) {
+                mat[i][j] = 0;
+            }
+        }
+
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < row + 1; col++) {
+                mat[row][col] = 1;
+            }
+            sol[row] = row;
+        }
+    }
+
 
     public int findKthLargest2(int[] nums, int k) {
 
@@ -76,11 +97,174 @@ public class HeapTest {
         return queue.size() > 0 ? queue.poll() : 0;
     }
 
+    private int binarySearch(int[] row) {
+        int low = 0;
+        int high = row.length;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (row[mid] == 1) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+
+    public int[] kWeakestRowsLeet(int[][] mat, int k) {
+        int m = mat.length;
+        int n = mat[0].length;
+
+        // Create a Priority Queue that measures firstly on strength and then indexes.
+//        Comparator<int[]> descFirtIn = Comparator.<int[]>comparingInt(pair -> pair[0]).thenComparingInt(pair -> pair[1]).reversed();
+//        PriorityQueue<int[]> pq = new  PriorityQueue<>(descFirtIn);
+        PriorityQueue<int[]> pq = new  PriorityQueue<>((a, b) -> {
+            if (a[0] == b[0]) return b[1] - a[1];
+            else return b[0] - a[0];
+        });
+
+        // Add strength/index pairs to the pq. Whenever length > k, remove the largest.
+        for (int i = 0; i < m; i++) {
+            int strength = binarySearch(mat[i]);
+            int[] entry = new int[]{strength, i};
+            pq.add(entry);
+            if (pq.size() > k) {
+                pq.poll();
+            }
+        }
+
+        // Pull the indexes out of the priority queue.
+        int[] indexes = new int[k];
+        for (int i = k - 1; i >= 0; i--) {
+            int[] pair = pq.poll();
+            indexes[i] = pair[1];
+        }
+
+        return indexes;
+    }
+
+    public int[] kWeakestRowsBinary(int[][] mat, int k) {
+        Integer[] rows = Arrays.stream(mat).map(this::binarySearch).toArray(Integer[]::new);
+        Comparator<Integer> descFirtIn = Comparator.<Integer>comparingInt(j -> rows[j]).thenComparingInt(i->i).reversed();
+
+        Queue<Integer> heap = new PriorityQueue<>(k, descFirtIn);
+
+        for (int i = 0; i < mat.length; i++) {
+            heap.add(i);
+            if (heap.size() > k) heap.poll();
+        }
+
+        int[] sol = new int[k];
+        IntStream.rangeClosed(0, k - 1).forEach(i -> sol[k - 1 - i] = heap.poll());
+        return sol;
+    }
+
+    public int[] kWeakestRowsBinary2(int[][] mat, int k) {
+        Comparator<int[]> descFirtIn = Comparator.<int[]>comparingInt(pair -> pair[0])
+                .thenComparingInt(pair -> pair[1]).reversed();
+
+        Queue<int[]> heap = new PriorityQueue<>(k, descFirtIn);
+
+        for (int i = 0; i < mat.length; i++) {
+            heap.add(new int[] {binarySearch(mat[i]), i});
+            if (heap.size() > k) heap.poll();
+        }
+
+        int[] sol = new int[k];
+        IntStream.rangeClosed(0, k - 1).forEach(i -> sol[k - 1 - i] = heap.poll()[1]);
+        return sol;
+    }
+
+
+    public int[] kWeakestRowsSum(int[][] mat, int k) {
+        List<Integer> rows = Arrays.stream(mat).map(vec -> Arrays.stream(vec).sum()).collect(Collectors.toList());
+
+        Comparator<Integer> descFirtIn = Comparator.comparingInt(rows::get).thenComparingInt(i->i).reversed();
+        Queue<Integer> heap = new PriorityQueue<>(k, descFirtIn);
+
+        for (int i = 0; i < mat.length; i++) {
+            heap.add(i);
+            if (heap.size() > k) heap.poll();
+        }
+
+        int[] sol = new int[k];
+        IntStream.rangeClosed(0, k - 1).forEach(i -> sol[k - 1 - i] = heap.poll());
+        return sol;
+    }
+
+    public int[] kWeakestMismatct(int[][] mat, int k) {
+        int[] zeros = new int[mat[0].length];
+        Arrays.fill(zeros, 1);
+
+        List<Integer> rows = Arrays.stream(mat).map(vec -> Arrays.mismatch(zeros, vec)).map(i-> i == -1 ? mat[0].length : i).collect(Collectors.toList());
+
+        Comparator<Integer> descFirtIn = Comparator.comparingInt(rows::get).thenComparingInt(i->i).reversed();
+        Queue<Integer> heap = new PriorityQueue<>(k, descFirtIn);
+
+        for (int i = 0; i < mat.length; i++) {
+            heap.add(i);
+            if (heap.size() > k) heap.poll();
+        }
+
+        int[] sol = new int[k];
+        IntStream.rangeClosed(0, k - 1).forEach(i -> sol[k - 1 - i] = heap.poll());
+        return sol;
+    }
+
+    @Test
+    public void testWeekestRow() {
+        assertArrayEquals(new int[]{0, 1}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 1}}, 2));
+
+
+        assertArrayEquals(new int[]{0}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 0}}, 1));
+        assertArrayEquals(new int[]{0}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 1}}, 1));
+        assertArrayEquals(new int[]{0, 1}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 0}}, 2));
+        assertArrayEquals(new int[]{0,1}, kWeakestRowsBinary2(new int[][]{{1, 0}, {1, 0}}, 2));
+        assertArrayEquals(new int[]{2, 0, 3}, kWeakestRowsBinary2(new int[][]{
+                {1, 1, 0, 0, 0},
+                {1, 1, 1, 1, 0},
+                {1, 0, 0, 0, 0},
+                {1, 1, 0, 0, 0},
+                {1, 1, 1, 1, 1}}, 3));
+
+        assertArrayEquals(new int[]{2, 0, 3}, kWeakestRowsBinary2(new int[][]{
+                {1, 1, 0, 0, 0},
+                {1, 1, 1, 1, 0},
+                {1, 0, 0, 0, 0},
+                {1, 1, 1, 0, 0},
+                {1, 1, 1, 1, 1}}, 3));
+    }
+
+    @Test
+    public void testWeakestLongLeet() {
+        assertArrayEquals(sol, kWeakestRowsLeet(mat, size));
+    }
+
+    @Test
+    public void testWeakestLongBinary() {
+        assertArrayEquals(sol, kWeakestRowsBinary(mat, size));
+    }
+
+    @Test
+    public void testWeakestLongBinary2() {
+        assertArrayEquals(sol, kWeakestRowsBinary2(mat, size));
+    }
+
+    @Test
+    public void testWeakestLongSum() {
+        assertArrayEquals(sol, kWeakestRowsSum(mat, size));
+    }
+
+    @Test
+    public void testWeakestLongMismatch() {
+        assertArrayEquals(sol, kWeakestMismatct(mat, size));
+    }
+
     @Test
     public void testStone() {
-        assertEquals(1, lastStoneWeight(new int[] {2,7,4,1,8,1}));
-        assertEquals(0, lastStoneWeight(new int[] {2,2}));
-//        assertEquals(5, lastStoneWeight(new int[] {31,26,33,21,40}));
+        assertEquals(1, lastStoneWeight(new int[]{2, 7, 4, 1, 8, 1}));
+        assertEquals(0, lastStoneWeight(new int[]{2, 2}));
+//        assertEquals(5, lastStoneWeight(new int[]{31, 26, 33, 21, 40}));
     }
 
     @Test
