@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -212,37 +213,29 @@ public class HeapTest {
     }
 
     public int kthSmallest(int[][] matrix, int k) {
-        TreeSet<List<Integer>> visited = new TreeSet<>(Comparator.comparingInt(vec -> matrix[vec.get(0)][vec.get(1)]));
+            Queue<int[]> heap = new PriorityQueue<>(matrix.length, Comparator.comparingInt(ter -> matrix[ter[0]][ter[1]]));
+            IntStream.range(0, matrix.length).mapToObj(row -> new int[]{row, 0})
+                    .forEach(heap::offer);
 
-        List<Integer> cand = List.of(0, 0);
-        visited.add(cand);
-        for (int count = 0; count < k; count++) {
-            cand = visited.pollFirst();
-
-            if (cand.get(0) < matrix.length - 1) {
-                List<Integer> cand1 = List.of(cand.get(0) + 1, cand.get(1));
-                if (!visited.contains(cand1)) visited.add(cand1);
+            int[] minTer = new int[2];
+            for (int count = 0; count < k; count++) {
+                minTer = heap.poll();
+                if (minTer[1] < matrix[0].length - 1) heap.offer(new int[]{minTer[0], minTer[1]+1});
             }
-
-            if (cand.get(1) < matrix.length - 1) {
-                List<Integer> cand2 = List.of(cand.get(0), cand.get(1) + 1);
-                if (!visited.contains(cand2)) visited.add(cand2);
-            }
-        }
-        return matrix[cand.get(0)][cand.get(1)];
+            return matrix[minTer[0]][minTer[1]];
     }
 
     @Test
     public void testSmallest() {
-        assertEquals(15, kthSmallest(new int[][]{{1,5,9}, {10,11,13}, {12,13,15}}, 8));
-
-        assertEquals(11, kthSmallest(new int[][]{{1, 3, 5}, {6, 7, 12}, {11, 14, 14}}, 6));
-
         assertEquals(3, kthSmallest(new int[][]{{1, 2}, {3, 4}}, 3));
         assertEquals(4, kthSmallest(new int[][]{{1, 2}, {3, 4}}, 4));
         assertEquals(1, kthSmallest(new int[][]{{1}}, 1));
         assertEquals(1, kthSmallest(new int[][]{{1, 2}, {3, 4}}, 1));
         assertEquals(2, kthSmallest(new int[][]{{1, 2}, {3, 4}}, 2));
+        assertEquals(9, kthSmallest(new int[][]{{3,8,8}, {3,8,8}, {3,9,13}}, 8));
+        assertEquals(14, kthSmallest(new int[][]{{1, 3, 5}, {6, 7, 12}, {11, 14, 14}}, 8));
+        assertEquals(11, kthSmallest(new int[][]{{1, 3, 5}, {6, 7, 12}, {11, 14, 14}}, 6));
+        assertEquals(13, kthSmallest(new int[][]{{1,5,9}, {10,11,13}, {12,13,15}}, 8));
     }
 
 
