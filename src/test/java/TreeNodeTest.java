@@ -1,13 +1,66 @@
 import com.google.common.collect.Iterators;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
 public class TreeNodeTest {
+
+    class SumRootToLeaf {
+
+        int sumRootToLeaf(TreeNode node) {
+            if (node.left == null && node.right == null) return node.val;
+
+            int val = node.val << 1;
+            int sum  = 0;
+            if (node.left != null) sum += val + sumRootToLeaf(node.left);
+            if (node.right != null) sum += val + sumRootToLeaf(node.right);
+            return sum;
+        }
+
+    }
+
+    public int sumRootToLeaf(TreeNode root) {
+        return new SumRootToLeaf().sumRootToLeaf(root);
+    }
+
+    public int sumRootToLeaf2(TreeNode root) {
+        int sum = 0;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            int shift = node.val << 1;
+
+            if (node.left != null) {
+                node.left.val += shift;
+                queue.offer(node.left);
+            }
+            if (node.right != null) {
+                node.right.val += shift;
+                queue.offer(node.right);
+            }
+            if (node.left == null && node.right == null) sum += node.val;
+        }
+        return sum;
+    }
+
+    @Test
+    public void testSum() {
+        assertEquals(22, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0,1,0,1,0,1]").get()));
+
+        assertEquals(4, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0,0]").get()));
+        assertEquals(5, sumRootToLeaf(Wrapper.stringToTreeNode("[1,1,0]").get()));
+        assertEquals(6, sumRootToLeaf(Wrapper.stringToTreeNode("[1,1,1]").get()));
+        assertEquals(2, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0]").get()));
+        assertEquals(1, sumRootToLeaf(Wrapper.stringToTreeNode("[1]").get()));
+    }
 
     @Test
     public void testParseFloor() {
@@ -153,7 +206,7 @@ public class TreeNodeTest {
     @Test
     public void testLeaveNodes() {
         Stream<TreeNode> treeNodeStream = TreeNode.leaveNodes(Wrapper.stringToTreeNode("[1,2,2,2,null,2]").get());
-        assertEquals(List.of(2,2), treeNodeStream.map(TreeNode::getVal).toList());
+        assertEquals(List.of(2, 2), treeNodeStream.map(TreeNode::getVal).toList());
     }
 
     @Test
@@ -204,7 +257,7 @@ public class TreeNodeTest {
     }
 
     @Test
-    public void testIsBalanced(){
+    public void testIsBalanced() {
         TreeNode root;
 
         root = Wrapper.stringToTreeNode("[1,3,3,9,null,9,null,2]").get();
