@@ -1,6 +1,11 @@
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -67,13 +72,39 @@ public class IntervalTest {
                 .allMatch(i -> intervals[i][1] <= intervals[i + 1][0]);
     }
 
+    public int minMeetingRooms2(int[][] intervals) {
+        Arrays.sort(intervals, Comparator.comparingInt(vec -> vec[0]));
+
+        Queue<Integer> rooms = new PriorityQueue<>();
+        for (int[] pair: intervals) {
+            if (!rooms.isEmpty() && rooms.peek() <= pair[0]) rooms.poll();
+            rooms.offer(pair[1]);
+        }
+
+        return rooms.size();
+    }
+
     public int minMeetingRooms(int[][] intervals) {
-        return 1;
+        Arrays.sort(intervals, Comparator.comparingInt(vec -> vec[0]));
+
+        Queue<Integer> queue = Arrays.stream(intervals).collect(
+                PriorityQueue<Integer>::new,
+                (rooms, meeting) -> {
+                    if (!rooms.isEmpty() && rooms.peek() <= meeting[0]) rooms.poll();
+                    rooms.offer(meeting[1]);
+                },
+                (q, l) -> q.addAll(l));
+        return queue.size();
     }
 
 
     @Test
     public void testMin() {
+        assertEquals(2, minMeetingRooms(new int[][]{{1,2}, {1, 2}, {3, 4}}));
+
+
+        assertEquals(1, minMeetingRooms(new int[][]{{13,15}, {1, 13}}));
+        assertEquals(2, minMeetingRooms(new int[][]{{19, 20}, {1, 10}, {5, 14}}));
         assertEquals(1, minMeetingRooms(new int[][]{{1, 2}}));
     }
 
