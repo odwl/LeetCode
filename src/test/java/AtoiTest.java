@@ -11,9 +11,12 @@ public class AtoiTest {
         s = s.trim();
         if (s.isEmpty()) return 0;
 
+        StringBuffer buf = new StringBuffer(s);
+
         boolean isNeg = false;
         if (s.charAt(0) == '+' || s.charAt(0) == '-') {
             isNeg = s.charAt(0) == '-';
+            buf.deleteCharAt(0);
             s = s.substring(1, s.length());
         }
 
@@ -30,7 +33,6 @@ public class AtoiTest {
         }
 
         l = isNeg ? -l : l;
-
         l = Math.min(l, Integer.MAX_VALUE);
         l = Math.max(l, Integer.MIN_VALUE);
         return (int) l;
