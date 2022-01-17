@@ -101,8 +101,6 @@ public class IntervalTest {
     @Test
     public void testMin() {
         assertEquals(2, minMeetingRooms(new int[][]{{1,2}, {1, 2}, {3, 4}}));
-
-
         assertEquals(1, minMeetingRooms(new int[][]{{13,15}, {1, 13}}));
         assertEquals(2, minMeetingRooms(new int[][]{{19, 20}, {1, 10}, {5, 14}}));
         assertEquals(1, minMeetingRooms(new int[][]{{1, 2}}));
