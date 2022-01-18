@@ -12,25 +12,7 @@ import static org.junit.Assert.*;
 
 public class TreeNodeTest {
 
-    class SumRootToLeaf {
-
-        int sumRootToLeaf(TreeNode node) {
-            if (node.left == null && node.right == null) return node.val;
-
-            int val = node.val << 1;
-            int sum  = 0;
-            if (node.left != null) sum += val + sumRootToLeaf(node.left);
-            if (node.right != null) sum += val + sumRootToLeaf(node.right);
-            return sum;
-        }
-
-    }
-
     public int sumRootToLeaf(TreeNode root) {
-        return new SumRootToLeaf().sumRootToLeaf(root);
-    }
-
-    public int sumRootToLeaf2(TreeNode root) {
         int sum = 0;
         Queue<TreeNode> queue = new LinkedList<>();
         queue.offer(root);
@@ -54,7 +36,6 @@ public class TreeNodeTest {
     @Test
     public void testSum() {
         assertEquals(22, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0,1,0,1,0,1]").get()));
-
         assertEquals(4, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0,0]").get()));
         assertEquals(5, sumRootToLeaf(Wrapper.stringToTreeNode("[1,1,0]").get()));
         assertEquals(6, sumRootToLeaf(Wrapper.stringToTreeNode("[1,1,1]").get()));
