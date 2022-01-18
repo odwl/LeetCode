@@ -1,17 +1,11 @@
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
+import com.google.common.collect.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class Tests {
 
@@ -45,6 +39,38 @@ public class Tests {
         if (keep == 1) builder.append("1");
         return builder.reverse().toString();
     }
+
+
+    public boolean wordPattern(String pattern, String s) {
+        Map<Character, String> dict = new HashMap(s.length());
+        Map<String, Character> dict2 = new HashMap(s.length());
+
+        String[] splitS = s.split(" ");
+        if (splitS.length != pattern.length()) return false;
+
+        for (int i = 0; i < pattern.length(); i++) {
+            char pat = pattern.charAt(i);
+            boolean inKey = dict.containsKey(pat);
+            String split = splitS[i];
+            boolean inValue = dict2.containsKey(split);
+            if (inKey ^ inValue || (inKey && !split.equals(dict.get(pat)))) return false;
+
+            if(!inKey) {
+                dict.put(pat, split);
+                dict2.put(split, pat);
+            }
+        }
+        return true;
+    }
+
+    @Test
+    public void testWord() {
+        assertFalse(wordPattern("abba", "dog dog dog dog"));
+        assertTrue(wordPattern("abba", "dog cat cat dog"));
+        assertFalse(wordPattern("abbae", "dog cat cat dog"));
+        assertFalse(wordPattern("abbae", "dog cat cat"));
+    }
+
 
     @Test
     public void testAdd(){
