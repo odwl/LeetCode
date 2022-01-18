@@ -35,12 +35,12 @@ public class TreeNodeTest {
 
     @Test
     public void testSum() {
-        assertEquals(22, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0,1,0,1,0,1]").get()));
-        assertEquals(4, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0,0]").get()));
-        assertEquals(5, sumRootToLeaf(Wrapper.stringToTreeNode("[1,1,0]").get()));
-        assertEquals(6, sumRootToLeaf(Wrapper.stringToTreeNode("[1,1,1]").get()));
-        assertEquals(2, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0]").get()));
-        assertEquals(1, sumRootToLeaf(Wrapper.stringToTreeNode("[1]").get()));
+        assertEquals(22, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0,1,0,1,0,1]")));
+        assertEquals(4, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0,0]")));
+        assertEquals(5, sumRootToLeaf(Wrapper.stringToTreeNode("[1,1,0]")));
+        assertEquals(6, sumRootToLeaf(Wrapper.stringToTreeNode("[1,1,1]")));
+        assertEquals(2, sumRootToLeaf(Wrapper.stringToTreeNode("[1,0]")));
+        assertEquals(1, sumRootToLeaf(Wrapper.stringToTreeNode("[1]")));
     }
 
     @Test
@@ -65,13 +65,13 @@ public class TreeNodeTest {
 
     @Test
     public void testRound() {
-        assertEquals("[1]", Wrapper.stringToTreeNode("[1]").get().toString());
-        assertEquals("[1,2,3]", Wrapper.stringToTreeNode("[1,2,3]").get().toString());
+        assertEquals("[1]", Wrapper.stringToTreeNode("[1]").toString());
+        assertEquals("[1,2,3]", Wrapper.stringToTreeNode("[1,2,3]").toString());
     }
 
     @Test
     public void testRoundNull() {
-        assertEquals("[1,null,3]", Wrapper.stringToTreeNode("[1,null,3]").get().toString());
+        assertEquals("[1,null,3]", Wrapper.stringToTreeNode("[1,null,3]").toString());
     }
 
     @Test
@@ -80,12 +80,12 @@ public class TreeNodeTest {
         assertFalse(new TreeNode(1).equals(new TreeNode(2)));
         assertFalse(new TreeNode(1, new TreeNode(2), null).equals(new TreeNode(1)));
 
-        TreeNode root = Wrapper.stringToTreeNode("[1,2,3]").get();
-        TreeNode root2 = Wrapper.stringToTreeNode("[1,2,3]").get();
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,3]");
+        TreeNode root2 = Wrapper.stringToTreeNode("[1,2,3]");
         assertTrue(root.equals(root2));
 
-        root = Wrapper.stringToTreeNode("[1,2,3]").get();
-        root2 = Wrapper.stringToTreeNode("[1,2,3,4]").get();
+        root = Wrapper.stringToTreeNode("[1,2,3]");
+        root2 = Wrapper.stringToTreeNode("[1,2,3,4]");
         assertFalse(root.equals(root2));
     }
 
@@ -101,21 +101,21 @@ public class TreeNodeTest {
         assertEquals("[2]", merge.toString());
 
         root1 = new TreeNode(1);
-        root2 = Wrapper.stringToTreeNode("[1,2]").get();
+        root2 = Wrapper.stringToTreeNode("[1,2]");
         merge = root1.merge(root2);
         assertEquals("[2,2]", merge.toString());
 
         root1 = new TreeNode(1);
-        root2 = Wrapper.stringToTreeNode("[1,null,2]").get();
+        root2 = Wrapper.stringToTreeNode("[1,null,2]");
         merge = root1.merge(root2);
         assertEquals("[2,null,2]", merge.toString());
 
-        root1 = Wrapper.stringToTreeNode("[1,1,1]").get();
-        root2 = Wrapper.stringToTreeNode("[1,null,2]").get();
+        root1 = Wrapper.stringToTreeNode("[1,1,1]");
+        root2 = Wrapper.stringToTreeNode("[1,null,2]");
         merge = root1.merge(root2);
         assertEquals("[2,1,3]", merge.toString());
 
-        root1 = Wrapper.stringToTreeNode("[1,1,1]").get();
+        root1 = Wrapper.stringToTreeNode("[1,1,1]");
         root2 = null;
         merge = root1.merge(root2);
         assertEquals("[1,1,1]", merge.toString());
@@ -133,84 +133,84 @@ public class TreeNodeTest {
         root = new TreeNode(1, null, new TreeNode(2));
         Iterators.elementsEqual(List.of(new TreeNode(2)).iterator(), root.getPresentChildren().iterator());
 
-        root = Wrapper.stringToTreeNode("[1,2,3]").get();
+        root = Wrapper.stringToTreeNode("[1,2,3]");
         List<TreeNode> list = root.getPresentChildren().toList();
         Iterators.elementsEqual(List.of(new TreeNode(2)).iterator(), list.iterator());
     }
 
     @Test
     public void testInOrder() {
-        TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4]").get();
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4]");
         Stream<Integer> inOrder = root.inOrderParse().map(TreeNode::getVal);
         assertEquals("[4, 2, 1, 3]", inOrder.toList().toString());
     }
 
     @Test
     public void testPreOrder() {
-        TreeNode root = Wrapper.stringToTreeNode("[2,4]").get();
+        TreeNode root = Wrapper.stringToTreeNode("[2,4]");
         Stream<Integer> inOrder = root.preOrderParse().map(TreeNode::getVal);
         assertEquals("[2, 4]", inOrder.toList().toString());
 
-        root = Wrapper.stringToTreeNode("[1,2,3,4]").get();
+        root = Wrapper.stringToTreeNode("[1,2,3,4]");
         inOrder = root.preOrderParse().map(TreeNode::getVal);
         assertEquals("[1, 2, 4, 3]", inOrder.toList().toString());
     }
 
     @Test
     public void testPostOrder() {
-        TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4]").get();
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4]");
         Stream<Integer> inOrder = root.postOrderParse().map(TreeNode::getVal);
         assertEquals("[4, 2, 3, 1]", inOrder.toList().toString());
     }
 
     @Test
     public void testMinDifference() {
-        TreeNode root = Wrapper.stringToTreeNode("[1,2]").get();
+        TreeNode root = Wrapper.stringToTreeNode("[1,2]");
         assertEquals(1, root.minDifference());
 
-        root = Wrapper.stringToTreeNode("[1,3]").get();
+        root = Wrapper.stringToTreeNode("[1,3]");
         assertEquals(2, root.minDifference());
     }
 
     @Test
     public void testIsSymetric() {
-        assertTrue(Wrapper.stringToTreeNode("[1]").get().isSymetric());
-        assertFalse(Wrapper.stringToTreeNode("[1,2]").get().isSymetric());
-        assertFalse(Wrapper.stringToTreeNode("[1,2,3]").get().isSymetric());
-        assertTrue(Wrapper.stringToTreeNode("[1,2,2]").get().isSymetric());
-        assertTrue(Wrapper.stringToTreeNode("[1,2,2,3,4,4,3]").get().isSymetric());
-        assertFalse(Wrapper.stringToTreeNode("[1,2,2,3,4,4,2]").get().isSymetric());
-        assertFalse(Wrapper.stringToTreeNode("[1,2,2,null,3,null,3]").get().isSymetric());
-        assertFalse(Wrapper.stringToTreeNode("[1,2,2,2,null,2]").get().isSymetric());
+        assertTrue(Wrapper.stringToTreeNode("[1]").isSymetric());
+        assertFalse(Wrapper.stringToTreeNode("[1,2]").isSymetric());
+        assertFalse(Wrapper.stringToTreeNode("[1,2,3]").isSymetric());
+        assertTrue(Wrapper.stringToTreeNode("[1,2,2]").isSymetric());
+        assertTrue(Wrapper.stringToTreeNode("[1,2,2,3,4,4,3]").isSymetric());
+        assertFalse(Wrapper.stringToTreeNode("[1,2,2,3,4,4,2]").isSymetric());
+        assertFalse(Wrapper.stringToTreeNode("[1,2,2,null,3,null,3]").isSymetric());
+        assertFalse(Wrapper.stringToTreeNode("[1,2,2,2,null,2]").isSymetric());
     }
 
     @Test
     public void testLeaveNodes() {
-        Stream<TreeNode> treeNodeStream = TreeNode.leaveNodes(Wrapper.stringToTreeNode("[1,2,2,2,null,2]").get());
+        Stream<TreeNode> treeNodeStream = TreeNode.leaveNodes(Wrapper.stringToTreeNode("[1,2,2,2,null,2]"));
         assertEquals(List.of(2, 2), treeNodeStream.map(TreeNode::getVal).toList());
     }
 
     @Test
     public void testSumLeaveNodes() {
-        TreeNode root = Wrapper.stringToTreeNode("[1,2,2,2,null,2]").get();
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,2,2,null,2]");
         assertEquals(4, TreeNode.sumLeaveNodes(root));
     }
 
     @Test
     public void testSumLeftLeaveNodes() {
-        TreeNode root = Wrapper.stringToTreeNode("[1,2,2,2,null,2]").get();
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,2,2,null,2]");
         assertEquals(4, TreeNode.sumLeftLeaveNodes(root));
 
-        root = Wrapper.stringToTreeNode("[1,2,2,2,2]").get();
+        root = Wrapper.stringToTreeNode("[1,2,2,2,2]");
         assertEquals(2, TreeNode.sumLeftLeaveNodes(root));
 
-        root = Wrapper.stringToTreeNode("[1,2,2,2,null,null, 2]").get();
+        root = Wrapper.stringToTreeNode("[1,2,2,2,null,null, 2]");
         assertEquals(2, TreeNode.sumLeftLeaveNodes(root));
 
-        root = Wrapper.stringToTreeNode("[3,9,20,null,null,15,7]").get();
+        root = Wrapper.stringToTreeNode("[3,9,20,null,null,15,7]");
         assertEquals(24, TreeNode.sumLeftLeaveNodes(root));
 
-        root = Wrapper.stringToTreeNode("[0,2,4,1,null,3,-1,5,1,null,6,null,8]").get();
+        root = Wrapper.stringToTreeNode("[0,2,4,1,null,3,-1,5,1,null,6,null,8]");
         assertEquals(5, TreeNode.sumLeftLeaveNodes(root));
     }
 
@@ -221,19 +221,19 @@ public class TreeNodeTest {
         root = new TreeNode(0, null, new TreeNode(-1));
         assertEquals(-1, TreeNode.bottomLeftValue(root));
 
-        root = Wrapper.stringToTreeNode("[2,1,3]").get();
+        root = Wrapper.stringToTreeNode("[2,1,3]");
         assertEquals(1, TreeNode.bottomLeftValue(root));
 
-        root = Wrapper.stringToTreeNode("[2,1,3,4,5]").get();
+        root = Wrapper.stringToTreeNode("[2,1,3,4,5]");
         assertEquals(4, TreeNode.bottomLeftValue(root));
 
-        root = Wrapper.stringToTreeNode("[2,1,3,null,5]").get();
+        root = Wrapper.stringToTreeNode("[2,1,3,null,5]");
         assertEquals(5, TreeNode.bottomLeftValue(root));
 
-        root = Wrapper.stringToTreeNode("[2,1,3,null,5,6]").get();
+        root = Wrapper.stringToTreeNode("[2,1,3,null,5,6]");
         assertEquals(5, TreeNode.bottomLeftValue(root));
 
-        root = Wrapper.stringToTreeNode("[1,2,3,4,null,5,6,null,null,7]").get();
+        root = Wrapper.stringToTreeNode("[1,2,3,4,null,5,6,null,null,7]");
         assertEquals(7, TreeNode.bottomLeftValue(root));
     }
 
@@ -241,22 +241,22 @@ public class TreeNodeTest {
     public void testIsBalanced() {
         TreeNode root;
 
-        root = Wrapper.stringToTreeNode("[1,3,3,9,null,9,null,2]").get();
+        root = Wrapper.stringToTreeNode("[1,3,3,9,null,9,null,2]");
         assertFalse(TreeNode.isBalanced(root));
 
-        root = Wrapper.stringToTreeNode("[3,9,20]").get();
+        root = Wrapper.stringToTreeNode("[3,9,20]");
         assertTrue(TreeNode.isBalanced(root));
 
-        root = Wrapper.stringToTreeNode("[3,9,null,2]").get();
+        root = Wrapper.stringToTreeNode("[3,9,null,2]");
         assertFalse(TreeNode.isBalanced(root));
 
-        root = Wrapper.stringToTreeNode("[3,9,2,null,null,3,4]").get();
+        root = Wrapper.stringToTreeNode("[3,9,2,null,null,3,4]");
         assertTrue(TreeNode.isBalanced(root));
 
-        root = Wrapper.stringToTreeNode("[3,9,20,null,null,15,7]").get();
+        root = Wrapper.stringToTreeNode("[3,9,20,null,null,15,7]");
         assertTrue(TreeNode.isBalanced(root));
 
-        root = Wrapper.stringToTreeNode("[1,2,2,3,3,null,null,4,4]").get();
+        root = Wrapper.stringToTreeNode("[1,2,2,3,3,null,null,4,4]");
         assertFalse(TreeNode.isBalanced(root));
     }
 

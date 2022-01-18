@@ -13,10 +13,10 @@ public class CountNoneTest {
     @Test()
     public void testCountNode() {
 
-        TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4,5,6]").get();
+        TreeNode root = Wrapper.stringToTreeNode("[1,2,3,4,5,6]");
         assertEquals(6, root.countNode());
 
-        root = Wrapper.stringToTreeNode("[1]").get();
+        root = Wrapper.stringToTreeNode("[1]");
         assertEquals(1, root.countNode());
     }
 

@@ -30,14 +30,12 @@ class Wrapper {
         return root;
     }
 
-    public static Optional<TreeNode> stringToTreeNode(String input) {
-        if (input.equals("[]")) return Optional.empty();
-
+    public static TreeNode stringToTreeNode(String input) {
         List<Optional<Integer>> nodeList = Pattern.compile(",")
                 .splitAsStream(input.substring(1, input.length() - 1))
                 .map(s -> Optional.ofNullable(Ints.tryParse(s)))
                 .collect(Collectors.toList());
-        return Optional.ofNullable(arrayToTreeNode(nodeList));
+        return arrayToTreeNode(nodeList);
     }
 
     public static void prettyPrintTree(TreeNode node, String prefix, boolean isLeft) {

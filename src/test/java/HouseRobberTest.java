@@ -82,15 +82,15 @@ public class HouseRobberTest {
     @Test
     public void testHouseRobberTree() {
 
-        assertEquals(7, houseRobber(Wrapper.stringToTreeNode("[4,1,null,2,null,3]").get()));
+        assertEquals(7, houseRobber(Wrapper.stringToTreeNode("[4,1,null,2,null,3]")));
 
         assertEquals(1, houseRobber(new TreeNode(1)));
-        assertEquals(2, houseRobber(Wrapper.stringToTreeNode("[1,2]").get()));
-        assertEquals(2, houseRobber(Wrapper.stringToTreeNode("[2,1]").get()));
-        assertEquals(6, houseRobber(Wrapper.stringToTreeNode("[1,2,4]").get()));
-        assertEquals(6, houseRobber(Wrapper.stringToTreeNode("[1,4,2]").get()));
-        assertEquals(4, houseRobber(Wrapper.stringToTreeNode("[4,1,2]").get()));
-        assertEquals(7, houseRobber(Wrapper.stringToTreeNode("[3,2,3,null,3,null,1]").get()));
+        assertEquals(2, houseRobber(Wrapper.stringToTreeNode("[1,2]")));
+        assertEquals(2, houseRobber(Wrapper.stringToTreeNode("[2,1]")));
+        assertEquals(6, houseRobber(Wrapper.stringToTreeNode("[1,2,4]")));
+        assertEquals(6, houseRobber(Wrapper.stringToTreeNode("[1,4,2]")));
+        assertEquals(4, houseRobber(Wrapper.stringToTreeNode("[4,1,2]")));
+        assertEquals(7, houseRobber(Wrapper.stringToTreeNode("[3,2,3,null,3,null,1]")));
     }
 
 
