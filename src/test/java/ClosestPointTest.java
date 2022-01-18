@@ -4,8 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ClosestPointTest {
     public int[][] kClosest(int[][] points, int k) {
@@ -60,10 +59,10 @@ public class ClosestPointTest {
             if (diff <= 0) continue;
 
             if (bricks < diff && ladders > 0) {
-                    ladders--;
-                    if (!brickUsage.isEmpty() && brickUsage.peek() > diff) {
-                        bricks += brickUsage.poll();
-                    } else continue;
+                ladders--;
+                if (!brickUsage.isEmpty() && brickUsage.peek() > diff) {
+                    bricks += brickUsage.poll();
+                } else continue;
             }
 
             if (bricks < diff) break;
@@ -72,6 +71,50 @@ public class ClosestPointTest {
             bricks -= diff;
         }
         return i - 1;
+    }
+
+    public boolean canPlaceFlowers(int[] flowerbed, int n) {
+        boolean last = false;
+        int nbZeros = 0;
+        for (int i = 0; i < flowerbed.length; i++) {
+                if (flowerbed[i] == 0) nbZeros++;
+
+
+        }
+
+
+
+        int nbZeros = 0;
+        for (int i = flowerbed[0]; i < flowerbed.length; i++) {
+            if (flowerbed[i] == 0) nbZeros++;
+            else {
+                n -= (nbZeros - 1) / 2;
+                if (n <= 0) return true;
+                nbZeros = 0;
+                i++;
+            }
+        }
+        n -= (nbZeros + 1) / 2;
+        if (n <= 0) return true;
+        return false;
+    }
+
+    @Test
+    public void testFlowers() {
+        assertTrue(canPlaceFlowers(new int[]{0,0,1,0,1}, 1));
+        assertFalse(canPlaceFlowers(new int[]{1,0,0,0,0,1}, 2));
+
+        assertTrue(canPlaceFlowers(new int[]{1,0,0,0,0,1}, 1));
+
+
+        assertTrue(canPlaceFlowers(new int[]{0}, 1));
+
+        assertTrue(canPlaceFlowers(new int[]{1, 0, 0, 0, 1}, 1));
+
+        assertFalse(canPlaceFlowers(new int[]{1, 0, 1, 0, 1}, 1));
+        assertFalse(canPlaceFlowers(new int[]{1}, 1));
+        assertFalse(canPlaceFlowers(new int[]{1, 1, 0, 0, 1}, 1));
+        assertFalse(canPlaceFlowers(new int[]{1, 0, 0, 0, 1}, 2));
     }
 
     @Test
