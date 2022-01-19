@@ -49,11 +49,6 @@ public class ListNode {
         return val == listNode.val && Objects.equals(next, listNode.next);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(val, next);
-    }
-
     public static ListNode removeElements(ListNode head, int val) {
         if (head == null) return head;
         ListNode remaining = removeElements(head.next, val);

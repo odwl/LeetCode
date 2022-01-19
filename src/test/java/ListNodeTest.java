@@ -1,8 +1,51 @@
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNull;
+import static org.junit.Assert.assertNotEquals;
+
 
 public class ListNodeTest {
+
+    public ListNode detectCycle(ListNode head) {
+        Set<ListNode> set = new HashSet<>();
+        ListNode node = head;
+        while (node != null) {
+            if (set.contains(node)) return node;
+            set.add(node);
+            node = node.next;
+        }
+        return null;
+    }
+
+    @Test
+    public void testCycle() {
+        ListNode node;
+
+        node = ListNode.fromArray(new int[]{1, 2});
+        node.next.next = node;
+        assertEquals(node, detectCycle(node));
+
+        node = ListNode.fromArray(new int[]{1, 2});
+        assertEquals(null, detectCycle(node));
+
+        node = ListNode.fromArray(new int[]{1});
+        assertEquals(null, detectCycle(node));
+
+        node = ListNode.fromArray(new int[]{1});
+        node.next = node;
+        assertEquals(node, detectCycle(node));
+
+        node = ListNode.fromArray(new int[]{1, 2});
+        node.next = node;
+        assertEquals(node, detectCycle(node));
+
+
+    }
 
     @Test
     public void testFromString() {
