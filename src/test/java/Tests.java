@@ -5,7 +5,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class Tests {
 
@@ -42,8 +43,8 @@ public class Tests {
 
 
     public boolean wordPattern(String pattern, String s) {
-        Map<Character, String> dict = new HashMap(s.length());
-        Map<String, Character> dict2 = new HashMap(s.length());
+        Map<Character, String> dict = new HashMap<>(s.length());
+        Map<String, Character> dict2 = new HashMap<>(s.length());
 
         String[] splitS = s.split(" ");
         if (splitS.length != pattern.length()) return false;
@@ -61,6 +62,43 @@ public class Tests {
             }
         }
         return true;
+    }
+
+
+    public int minCostClimbingStairs(int[] cost) {
+        IntStream.iterate(cost.length - 3, i -> i - 1).limit(cost.length - 2)
+                .forEach(i -> cost[i] = cost[i] + Math.min(cost[i+1], cost[i+2]));
+        return Math.min(cost[0], cost[1]);
+    }
+
+    public int minCostClimbingStairsLoop(int[] cost) {
+        for (int i=cost.length-3; i >= 0; i--) {
+            cost[i] += Math.min(cost[i+1], cost[i+2]);
+        }
+        return Math.min(cost[0], cost[1]);
+    }
+
+    @Test
+    public void testClimbing() {
+        assertEquals(6, minCostClimbingStairs(new int[] {1,100,1,1,1,100,1,1,100,1}));
+        assertEquals(1, minCostClimbingStairs(new int[] {1,2}));
+        assertEquals(1, minCostClimbingStairs(new int[] {2,1}));
+        assertEquals(15, minCostClimbingStairs(new int[] {10,15,20}));
+
+
+
+    }
+
+    @Test
+    public void testLongStream (){
+        int[] data = new int[1000000];
+        Arrays.fill(data, 1);assertEquals(500000, minCostClimbingStairs(data));
+    }
+
+    @Test
+    public void testLongLoop (){
+        int[] data = new int[1000000];
+        Arrays.fill(data, 1);assertEquals(500000, minCostClimbingStairsLoop(data));
     }
 
     @Test
@@ -88,8 +126,8 @@ public class Tests {
         int[] aux = new int[array.length];
         MergeSort.merge(array, aux, 0, 0, 1);
 
-        assertTrue(aux[0] == 1);
-        assertTrue(aux[1] == 5);
+        assertEquals(1, aux[0]);
+        assertEquals(5, aux[1]);
     }
 
     @Test()
@@ -110,7 +148,7 @@ public class Tests {
         MergeSort.merge(array, aux, 0, 1, 3);
 
         assertTrue(isArraySorted(aux));
-        assertTrue(aux[3] == 5);
+        assertEquals(5, aux[3]);
     }
 
 
