@@ -34,7 +34,7 @@ public class Tests {
             int n1 = a1[i] == '0' ? 0 : 1;
             int n2 = b1[i] == '0' ? 0 : 1;
             builder.append(n1 ^ n2 ^ keep);
-            keep =((n1 | n2) & keep ) | (n1 & n2);
+            keep = ((n1 | n2) & keep) | (n1 & n2);
         }
         if (keep == 1) builder.append("1");
         return builder.reverse().toString();
@@ -55,12 +55,36 @@ public class Tests {
             boolean inValue = dict2.containsKey(split);
             if (inKey ^ inValue || (inKey && !split.equals(dict.get(pat)))) return false;
 
-            if(!inKey) {
+            if (!inKey) {
                 dict.put(pat, split);
                 dict2.put(split, pat);
             }
         }
         return true;
+    }
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int[] diff = new int[gas.length];
+        IntStream.range(0, gas.length - 1).forEach(i -> diff[i] = gas[(i + 1) % gas.length] - cost[i]);
+
+        for(int start = 0; start < gas.length; start++) {
+            int con = 0;//gas[start];
+            for (int i = start; i < start + gas.length; i++) {
+                int pos = i % (gas.length - 1);
+                con += diff[pos];
+                if (con <= 0) break;
+            }
+            if (con > 0) return start;
+        }
+
+        return -1;
+    }
+
+    @Test
+    public void testCircuit() {
+        assertEquals(4, canCompleteCircuit(new int[]{5,1,2,3,4}, new int[]{4,4,1,5,1}));
+        assertEquals(3, canCompleteCircuit(new int[]{1, 2, 3, 4, 5}, new int[]{3, 4, 5, 1, 2}));
+        assertEquals(-1, canCompleteCircuit(new int[]{2, 3, 4}, new int[]{3, 4, 3}));
     }
 
     @Test
@@ -73,7 +97,7 @@ public class Tests {
 
 
     @Test
-    public void testAdd(){
+    public void testAdd() {
         assertEquals("100", addBinary("11", "1"));
         String a = "10100000100100110110010000010101111011011001101110111111111101000000101111001110001111100001101";
         String b = "110101001011101110001111100110001010100001101011101010000011011011001011101111001100000011011110011";
@@ -82,7 +106,7 @@ public class Tests {
     }
 
     @Test
-    public void testMerge(){
+    public void testMerge() {
 
         int[] array = {5, 1};
         int[] aux = new int[array.length];
@@ -93,7 +117,7 @@ public class Tests {
     }
 
     @Test()
-    public void testMergeWith4(){
+    public void testMergeWith4() {
 
         int[] array = {4, 5, 1, 3};
         int[] aux = new int[array.length];
@@ -103,9 +127,9 @@ public class Tests {
     }
 
     @Test()
-    public void testMergeWith4Bis(){
+    public void testMergeWith4Bis() {
 
-        int[] array = {1,3,4,5};
+        int[] array = {1, 3, 4, 5};
         int[] aux = new int[array.length];
         MergeSort.merge(array, aux, 0, 1, 3);
 
@@ -115,7 +139,7 @@ public class Tests {
 
 
     @Test()
-    public void testOneElement(){
+    public void testOneElement() {
 
         Iterable<Integer> sorted = MergeSort.sort(Lists.newArrayList(5));
 
@@ -123,61 +147,61 @@ public class Tests {
     }
 
     @Test()
-    public void testTwoElement(){
-        Iterable<Integer> sorted = MergeSort.sort(Lists.newArrayList(5,1));
+    public void testTwoElement() {
+        Iterable<Integer> sorted = MergeSort.sort(Lists.newArrayList(5, 1));
 
         assertTrue(isArraySorted(sorted));
     }
 
 
     @Test()
-    public void testMergeSort4(){
+    public void testMergeSort4() {
 
-        Iterable<Integer> sorted = MergeSort.sort(Lists.newArrayList(1,3,4,5));
+        Iterable<Integer> sorted = MergeSort.sort(Lists.newArrayList(1, 3, 4, 5));
 
-        assertEquals(Lists.newArrayList(sorted), Lists.newArrayList(1,3,4,5));
+        assertEquals(Lists.newArrayList(sorted), Lists.newArrayList(1, 3, 4, 5));
     }
 
     @Test()
-    public void testMergeSortUnsorted(){
-        Iterable<Integer> sorted = MergeSort.sort(Lists.newArrayList(1,5, 4, 3));
+    public void testMergeSortUnsorted() {
+        Iterable<Integer> sorted = MergeSort.sort(Lists.newArrayList(1, 5, 4, 3));
 
-        assertEquals(Lists.newArrayList(sorted), Lists.newArrayList(1,3, 4, 5));
+        assertEquals(Lists.newArrayList(sorted), Lists.newArrayList(1, 3, 4, 5));
     }
 
     @Test()
-    public void testComplete(){
+    public void testComplete() {
         Iterable<Integer> sorted = MergeSort.sort(randomArray(10000));
         assertTrue(isArraySorted(sorted));
     }
 
     @Test()
-    public void testGuava(){
+    public void testGuava() {
         Iterable<Integer> sorted = Iterables.mergeSorted(
                 Lists.newArrayList(
-                        Lists.newArrayList(1,5),
-                        Lists.newArrayList(3,4)), Ordering.natural());
+                        Lists.newArrayList(1, 5),
+                        Lists.newArrayList(3, 4)), Ordering.natural());
         assertEquals(Lists.newArrayList(sorted), Lists.newArrayList(1, 3, 4, 5));
     }
 
-    private static boolean isArraySorted(Iterable<Integer> data){
+    private static boolean isArraySorted(Iterable<Integer> data) {
         List<Integer> list = Lists.newArrayList(data);
-        for(int i = 0 ; i < list.size() -1; i++){
-            if(list.get(i)>list.get(i+1))
+        for (int i = 0; i < list.size() - 1; i++) {
+            if (list.get(i) > list.get(i + 1))
                 return false;
         }
         return true;
     }
 
-    private static boolean isArraySorted(int[] data){
+    private static boolean isArraySorted(int[] data) {
         return isArraySorted(IntStream.of(data).boxed().collect(Collectors.toList()));
     }
 
-    private static List<Integer> randomArray(int size){
+    private static List<Integer> randomArray(int size) {
         int[] array = new int[size];
         Random rng = new Random();
-        for(int i = 0 ; i < size ; i++){
-            array[i]= rng.nextInt(Integer.MAX_VALUE);
+        for (int i = 0; i < size; i++) {
+            array[i] = rng.nextInt(Integer.MAX_VALUE);
         }
         return IntStream.of(array).boxed().collect(Collectors.toList());
     }
