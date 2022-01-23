@@ -1,10 +1,8 @@
 import com.google.common.collect.Iterators;
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,6 +29,111 @@ public class TreeNodeTest {
             if (node.left == null && node.right == null) sum += node.val;
         }
         return sum;
+    }
+
+    public TreeNode findNearestRightNode2(TreeNode root, TreeNode u) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        Queue<TreeNode> little = new LinkedList<>();
+        while (!queue.isEmpty()) {
+
+            TreeNode node = queue.poll();
+            if (node == u) return queue.peek();
+            if (node.left != null) little.offer(node.left);
+            if (node.right != null) little.offer(node.right);
+            if (queue.isEmpty()) {
+                queue = little;
+                little = new LinkedList<>();
+            }
+        }
+
+        return null;
+    }
+
+    private TreeNode findNearestRightNodeRec(TreeNode u, Queue<TreeNode> queue) {
+        Queue<TreeNode> little = new LinkedList<>();
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            if (node == u) return queue.peek();
+
+            if (node.left != null) little.offer(node.left);
+            if (node.right != null) little.offer(node.right);
+        }
+        return findNearestRightNodeRec(u, little);
+    }
+
+    public TreeNode findNearestRightNode3(TreeNode root, TreeNode u) {
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.offer(root);
+        return findNearestRightNodeRec(u, queue);
+    }
+
+    class FindNearest implements Supplier<TreeNode>{
+        TreeNode u;
+        Queue<TreeNode> queue;
+        TreeNode sol;
+
+        public FindNearest(TreeNode root, TreeNode u) {
+            this.u = u;
+            this.queue = new LinkedList<TreeNode>(Arrays.asList(root));
+        }
+
+        @Override
+        public TreeNode get() {
+            return compute();
+        }
+
+        private TreeNode compute() {
+            Queue<TreeNode> little = new LinkedList<>();
+            while (!queue.isEmpty()) {
+                TreeNode node = queue.poll();
+                if (node == u) return queue.peek();
+
+                if (node.left != null) little.offer(node.left);
+                if (node.right != null) little.offer(node.right);
+            }
+            queue = little;
+            return compute();
+        }
+    }
+
+    public TreeNode findNearestRightNode(TreeNode root, TreeNode u) {
+        return new FindNearest(root, u).get();
+    }
+
+    @Test
+    public void testNearst() {
+        TreeNode root, u, sol;
+        root = Wrapper.stringToTreeNode("[1,2,3,4]");
+        u = root.right;
+        assertEquals(null, findNearestRightNode(root, u));
+
+        root = Wrapper.stringToTreeNode("[3,10,1,7,8,9,4,null,null,2,null,null,11,null,null,null,null,5,null,6]");
+        u = root.right.right;
+        assertEquals(null, findNearestRightNode(root, u));
+
+        root = Wrapper.stringToTreeNode("[1,null,2]");
+        u = root.right;
+        assertEquals(null, findNearestRightNode(root, u));
+
+        root = Wrapper.stringToTreeNode("[1,2,null,3]");
+        u = root.left;
+        assertEquals(null, findNearestRightNode(root, u));
+
+
+        root = Wrapper.stringToTreeNode("[1,2,3,null,4,5,6]");
+
+        u = root;
+        assertEquals(null, findNearestRightNode(root, u));
+
+        u = root.left;
+        sol = root.right;
+        assertEquals(sol, findNearestRightNode(root, u));
+
+        u = root.left.right;
+        sol = root.right.left;
+        assertEquals(sol, findNearestRightNode(root, u));
     }
 
     @Test
