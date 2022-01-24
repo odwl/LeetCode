@@ -193,6 +193,22 @@ public class Tests {
         return new MaxArea(height).get();
     }
 
+    public boolean detectCapitalUse(String word) {
+        char first = word.charAt(0);
+        String lower = word.toLowerCase();
+        if ('a' <= first) return word.equals(lower);
+        String sub = word.substring(1, word.length());
+        return sub.equals(lower.substring(1, word.length())) || sub.equals(sub.toUpperCase());
+    }
+
+    @Test
+    public void testCapital() {
+        assertTrue(detectCapitalUse("USA"));
+        assertTrue(detectCapitalUse("usa"));
+        assertTrue(detectCapitalUse("Usa"));
+        assertFalse(detectCapitalUse("UsA"));
+    }
+
     @Test
     public void testMax() {
         assertEquals(1, maxArea(new int[]{1,1}));
