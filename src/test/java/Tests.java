@@ -160,7 +160,8 @@ public class Tests {
 
         if (right - left == 1) return area;
 
-        if (height[left] <= height[right]) left++; else right--;
+        if (height[left] <= height[right]) left++;
+        else right--;
         return Math.max(area, maxAreaRec(height, left, right));
     }
 
@@ -183,11 +184,11 @@ public class Tests {
             int area = (right - left) * Math.min(height[left], height[right]);
             if (right - left == 1) return area;
 
-            if (height[left] <= height[right]) left++; else right--;
+            if (height[left] <= height[right]) left++;
+            else right--;
             return Math.max(area, recursive());
         }
     }
-
 
     public int maxArea(int[] height) {
         return new MaxArea(height).get();
@@ -201,6 +202,30 @@ public class Tests {
         return sub.equals(lower.substring(1, word.length())) || sub.equals(sub.toUpperCase());
     }
 
+    public boolean validMountainArray(int[] arr) {
+        if (arr.length <= 1 || arr[0] >= arr[1] || arr[arr.length-1] >= arr[arr.length-2]) return false;
+        boolean asc = true;
+
+        for (int it = 1; it < arr.length - 1; it++) {
+            int el = arr[it];
+            int prec = arr[it-1];
+            if (el == prec || !asc && el > prec) return false;
+            if (el < prec) asc = false;
+        }
+        return true;
+    }
+
+
+    @Test
+    public void tetMountain() {
+        assertFalse(validMountainArray(new int[]{3, 2, 1}));
+        assertFalse(validMountainArray(new int[]{2, 1}));
+        assertTrue(validMountainArray(new int[]{0, 3, 2, 1}));
+        assertFalse(validMountainArray(new int[]{1}));
+        assertFalse(validMountainArray(new int[]{1, 2}));
+        assertFalse(validMountainArray(new int[]{3, 5, 5}));
+    }
+
     @Test
     public void testCapital() {
         assertTrue(detectCapitalUse("USA"));
@@ -211,12 +236,12 @@ public class Tests {
 
     @Test
     public void testMax() {
-        assertEquals(1, maxArea(new int[]{1,1}));
+        assertEquals(1, maxArea(new int[]{1, 1}));
 
-        assertEquals(49, maxArea(new int[]{1,8,6,2,5,4,8,3,7}));
+        assertEquals(49, maxArea(new int[]{1, 8, 6, 2, 5, 4, 8, 3, 7}));
 
-        assertEquals(1, maxArea(new int[]{1,2}));
-        assertEquals(2, maxArea(new int[]{1,2,1}));
+        assertEquals(1, maxArea(new int[]{1, 2}));
+        assertEquals(2, maxArea(new int[]{1, 2, 1}));
 
     }
 
